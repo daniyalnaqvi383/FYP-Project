@@ -55,6 +55,7 @@ export default function Lists() {
       oldPrice: item.oldPrice || "",
       category: item.category,
       subcategory: item.subcategory,
+      styleType: item.styleType || "eastern", // 👈 Controls tracking current style input defaults
       productType: item.productType,
       status: item.status,
 
@@ -90,6 +91,7 @@ export default function Lists() {
         oldPrice: editProduct.oldPrice
           ? Number(editProduct.oldPrice)
           : null,
+        styleType: editProduct.styleType, // 👈 Strict sync update payload field mapping
 
         sizes: editProduct.size.split(",").map((s) => ({
           size: s.trim(),
@@ -242,7 +244,7 @@ export default function Lists() {
       </div>
 
       {/* =========================
-          MODAL (FIXED + CLEAN UI)
+          MODAL TEMPLATE LAYER
       ========================= */}
       {modalOpen && editProduct && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center px-4">
@@ -331,6 +333,19 @@ export default function Lists() {
                   <option value="sold">Sold</option>
                 </select>
 
+              </div>
+
+              {/* STYLE TYPE DROPDOWN COMPONENT */}
+              <div className="flex gap-2">
+                <select
+                  className="border rounded-lg w-full p-2"
+                  name="styleType"
+                  value={editProduct.styleType}
+                  onChange={handleEditChange}
+                >
+                  <option value="eastern">Eastern Style</option>
+                  <option value="western">Western Style</option>
+                </select>
               </div>
 
               <div className="flex gap-2">

@@ -9,9 +9,13 @@ export default function Trending() {
   const [hoveredId, setHoveredId] = useState(null);
   const dispatch = useDispatch();
 
+  // ============================================
+  // FETCH TRENDING PRODUCTS (UPDATED WITH UNIVERSAL QUERY)
+  // ============================================
   const fetchTrending = async () => {
     try {
-      const res = await fetch("http://localhost:8030/api/product/trending");
+      // 💡 Sub-route (/trending) ki bajaye ab universal filter query parameter use kiya hai
+      const res = await fetch("http://localhost:8030/api/product?productType=trending");
       const data = await res.json();
       if (data.products) setProducts(data.products);
     } catch (error) {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom"; // 👈 FIX 1: Imported Link here to solve ReferenceError
 import {
   AiOutlineShoppingCart,
   AiOutlineHeart,
@@ -7,7 +7,7 @@ import {
   AiOutlinePlus,
 } from "react-icons/ai";
 import { useDispatch } from "react-redux";
-import { addToCart, openCart } from "../redux/cartSlice.js"; // apna path adjust karo
+import { addToCart, openCart } from "../redux/cartSlice.js"; 
 
 export default function ProductDetail() {
   const { id } = useParams();
@@ -38,11 +38,11 @@ export default function ProductDetail() {
     }
   };
 
-  // RELATED
+  // RELATED PRODUCTS
   const fetchRelatedProducts = async (category) => {
     try {
       const res = await fetch(
-        `http://localhost:8030/api/product/category/${category}`
+        `http://localhost:8030/api/product?category=${category}`
       );
       const data = await res.json();
       if (data.success) {
@@ -191,6 +191,7 @@ export default function ProductDetail() {
 
           {/* BUTTONS */}
           <div className="flex flex-col sm:flex-row gap-4 mb-8">
+            {/* 👈 FIX 2: Cleaned nested double button here to resolve validateDOMNesting error */}
             <button
               onClick={handleAddToCart}
               className="flex-1 bg-black text-white py-4 rounded-lg flex items-center justify-center gap-2 hover:bg-gray-800 transition"
@@ -206,6 +207,10 @@ export default function ProductDetail() {
 
           {/* EXTRA INFO */}
           <div className="border-t pt-6 flex flex-col gap-3 text-gray-600 text-sm">
+            <p>
+              <span className="font-semibold text-black">Style Type:</span>{" "}
+              <span className="capitalize">{product.styleType || "Eastern"}</span>
+            </p>
             <p>
               <span className="font-semibold text-black">Subcategory:</span>{" "}
               {product.subcategory}
@@ -240,19 +245,23 @@ export default function ProductDetail() {
             ?.slice(0, 4)
             ?.map((item) => (
               <div key={item._id}>
-                <div className="overflow-hidden bg-[#f7f3ee] rounded-lg">
-                  <img
-                    src={item.images?.[0]}
-                    alt={item.name}
-                    className="w-full aspect-[3/4] object-cover"
-                  />
-                </div>
+                <Link to={`/product/${item._id}`}>
+                  <div className="overflow-hidden bg-[#f7f3ee] rounded-lg">
+                    <img
+                      src={item.images?.[0]}
+                      alt={item.name}
+                      className="w-full aspect-[3/4] object-cover"
+                    />
+                  </div>
+                </Link>
                 <div className="pt-4">
-                  <h3 className="text-[15px] font-medium truncate">
-                    {item.name}
-                  </h3>
+                  <Link to={`/product/${item._id}`}>
+                    <h3 className="text-[15px] font-medium truncate text-gray-800 hover:text-[#C19A6B] transition">
+                      {item.name}
+                    </h3>
+                  </Link>
                   <div className="flex items-center gap-2 mt-1">
-                    <span className="font-semibold">Rs {item.price}</span>
+                    <span className="font-semibold text-gray-900">Rs {item.price}</span>
                     {item.oldPrice && (
                       <span className="text-gray-400 line-through text-sm">
                         Rs {item.oldPrice}

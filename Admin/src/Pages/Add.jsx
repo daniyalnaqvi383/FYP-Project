@@ -13,7 +13,7 @@ export default function AddProduct() {
   const [files, setFiles] = useState([null, null, null]);
 
   // ============================================
-  // PRODUCT STATE
+  // PRODUCT STATE (UPDATED WITH STYLETYPE)
   // ============================================
   const [product, setProduct] = useState({
     name: "",
@@ -22,6 +22,7 @@ export default function AddProduct() {
     oldPrice: "",
     category: "",
     subcategory: "",
+    styleType: "eastern", // 👈 Added styleType initial tracking state value
     productType: "normal",
     status: "normal",
     sizes: [{ size: "", stock: "" }],
@@ -98,7 +99,7 @@ export default function AddProduct() {
   };
 
   // ============================================
-  // SUBMIT
+  // SUBMIT (UPDATED PAYLOAD BINDING)
   // ============================================
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -117,6 +118,7 @@ export default function AddProduct() {
       formData.append("oldPrice", product.oldPrice);
       formData.append("category", product.category);
       formData.append("subcategory", product.subcategory);
+      formData.append("styleType", product.styleType); // 👈 Dispatched safely to backend network stream
       formData.append("productType", product.productType);
       formData.append("status", product.status);
 
@@ -143,6 +145,7 @@ export default function AddProduct() {
           oldPrice: "",
           category: "",
           subcategory: "",
+          styleType: "eastern", // 👈 Resets cleanly after save
           productType: "normal",
           status: "normal",
           sizes: [{ size: "", stock: "" }],
@@ -267,7 +270,7 @@ export default function AddProduct() {
                 />
               </div>
 
-              {/* PRODUCT TYPE */}
+              {/* PRODUCT TYPE & STYLE TYPE WRAPPER GRID */}
               <div className="flex flex-col md:flex-row gap-4">
                 <select
                   className="border rounded-lg px-4 py-2 flex-1"
@@ -278,6 +281,17 @@ export default function AddProduct() {
                   <option value="normal">Normal</option>
                   <option value="featured">Featured</option>
                   <option value="trending">Trending</option>
+                </select>
+
+                {/* 👈 NEW: Added styleType Selection Interface seamlessly matching raw look */}
+                <select
+                  className="border rounded-lg px-4 py-2 flex-1"
+                  name="styleType"
+                  value={product.styleType}
+                  onChange={handleChange}
+                >
+                  <option value="eastern">Eastern Style</option>
+                  <option value="western">Western Style</option>
                 </select>
               </div>
 

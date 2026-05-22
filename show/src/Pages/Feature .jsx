@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { AiOutlineZoomIn, AiOutlineShoppingCart, AiOutlineHeart, AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
 import { useDispatch } from "react-redux";
 import { addToCart, openCart } from "../redux/cartSlice.js"; // apna path adjust karo
+import { Link } from "react-router-dom";
 
 function Feature() {
   const [products, setProducts] = useState([]);
@@ -9,9 +10,13 @@ function Feature() {
   const sliderRef = useRef(null);
   const dispatch = useDispatch();
 
+  // ============================================
+  // FETCH FEATURED PRODUCTS (UPDATED WITH UNIVERSAL QUERY)
+  // ============================================
   const fetchFeatured = async () => {
     try {
-      const res = await fetch("http://localhost:8030/api/product/featured");
+      // 💡 Sub-route (/featured) ki bajaye ab universal filter query parameter use kiya hai
+      const res = await fetch("http://localhost:8030/api/product?productType=featured");
       const data = await res.json();
       if (data.products) setProducts(data.products);
     } catch (error) {
@@ -63,7 +68,7 @@ function Feature() {
             <AiOutlineRight className="text-[18px]" />
           </button>
 
-          <div ref={sliderRef} className="flex gap-6 overflow-x-auto scroll-smooth scrollbar-hide px-12">
+          <div ref={sliderRef} className="flex gap-6 overflow-x-auto scroll-smooth scroll-smooth check scrollbar-hide px-12">
             {products.map((item) => (
               <div
                 key={item._id}
@@ -71,6 +76,7 @@ function Feature() {
                 onMouseEnter={() => setHoveredId(item._id)}
                 onMouseLeave={() => setHoveredId(null)}
               >
+                <Link to={`/product/${item._id}`}>
                 <div className="relative overflow-hidden bg-[#f7f3ee] rounded-md">
                   <img
                     src={item.images?.[0]}
@@ -103,6 +109,7 @@ function Feature() {
                     </button>
                   </div>
                 </div>
+                </Link>
                 <div className="pt-4">
                   <h3 className="text-[15px] text-gray-800 font-medium mb-1 truncate hover:text-[#C19A6B] transition">
                     {item.name}

@@ -8,6 +8,13 @@ const productSchema = new mongoose.Schema(
       trim: true,
     },
 
+    slug: {
+      type: String,
+      unique: true,
+      lowercase: true,
+      trim: true,
+    },
+
     description: {
       type: String,
       required: true,
@@ -29,6 +36,14 @@ const productSchema = new mongoose.Schema(
       required: true,
     },
 
+    // STYLE TYPE FILTER (Eastern / Western)
+    styleType: {
+      type: String,
+      enum: ["eastern", "western"],
+      required: true,
+      default: "eastern", // Purana data safe rakhne ke liye safe fallback
+    },
+
     subcategory: {
       type: String,
       required: true,
@@ -46,13 +61,11 @@ const productSchema = new mongoose.Schema(
       default: "new",
     },
 
-    //  MULTIPLE IMAGES (CARD + DETAIL SUPPORT)
     images: {
       type: [String],
       required: true,
     },
 
-    // SIZE SYSTEM
     sizes: [
       {
         size: {
@@ -69,6 +82,23 @@ const productSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+// ========================================================
+// 🔥 SLUG AUTO GENERATE & UPDATE HOOK (FIXED)
+// ========================================================
+productSchema.pre("save", function (next) {
+  // Agar product naya hai YA admin ne product ka Name change/modify kiya hai
+  if (this.isModified("name") || !this.slug) {
+    if (this.name) {
+      this.slug = this.name
+        .toLowerCase()
+        .trim()
+        .replace(/ /g, "-")          // Saare spaces ko dashboard dash (-) se replace karein
+        .replace(/[^\w-]+/g, "");     // Special characters (@, #, $, %) saaf karein
+    }
+  }
+  next();
+});
 
 const Product = mongoose.model("Product", productSchema);
 
