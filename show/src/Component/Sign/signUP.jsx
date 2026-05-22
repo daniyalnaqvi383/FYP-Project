@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; 
 import { FcGoogle } from "react-icons/fc";
 import { signInWithPopup } from "firebase/auth";
 import { auth, provider } from "../../../utils/Firebase";
 
 const SignUP = () => {
+  const navigate = useNavigate(); 
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -19,7 +20,9 @@ const SignUP = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // ✅ Handle Submit
+  // ============================================
+  // ✅ Handle Submit (NORMAL SIGNUP)
+  // ============================================
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -27,11 +30,25 @@ const SignUP = () => {
 
     try {
       const res = await axios.post("http://localhost:8030/api/signup", formData);
-      setMessage(res.data.message); // "User registered successfully"
-      setFormData({ name: "", email: "", password: "" }); // reset form
+      
+      setMessage(res.data.message || "User registered successfully! ✅");
+      
+      // Save newly created token safely to memory layout storage block
+      if (res.data.token) {
+        localStorage.setItem("token", res.data.token);
+        // Dispatch instant event notification listener trigger to re-sync navbar
+        window.dispatchEvent(new Event("storage"));
+      }
+
+      setFormData({ name: "", email: "", password: "" }); 
+      
+      setTimeout(() => {
+        navigate("/");
+      }, 1500);
+
     } catch (err) {
       if (err.response) {
-        setMessage(err.response.data.message); // Backend error message
+        setMessage(err.response.data.message); 
       } else {
         setMessage("Something went wrong. Try again!");
       }
@@ -40,45 +57,41 @@ const SignUP = () => {
     }
   };
 
+  // ============================================
+  // 🌐 Google Signup
+  // ============================================
+  const googleSignup = async () => {
+    try {
+      const response = await signInWithPopup(auth, provider);
+      let user = response.user;
+      let name = user.displayName;
+      let email = user.email;
 
+      const res = await axios.post("http://localhost:8030/api/google-signup", {
+        name,
+        email,
+      });
 
-  // Google signup
-const googleSignup = async () => {
-  try {
-    const response = await signInWithPopup(auth, provider);
-    let user = response.user;
-    let name = user.displayName;
-    let email = user.email;
+      setMessage(res.data.message || "Signup/Login successful ✅");
 
-    // Backend API call
-    const res = await axios.post("http://localhost:8030/api/google-signup", {
-      name,
-      email,
-    });
+      if (res.data.token) {
+        localStorage.setItem("token", res.data.token);
+        window.dispatchEvent(new Event("storage"));
+      }
 
-    // Backend se jo response aaya usko handle karo
-    setMessage(res.data.message || "Signup/Login successful ✅");
+      setTimeout(() => {
+        navigate("/");
+      }, 1500);
 
-    // Agar token aaya to localStorage me save karlo
-    if (res.data.token) {
-      localStorage.setItem("token", res.data.token);
+    } catch (error) {
+      console.error("Google Signup Error:", error);
+      if (error.response) {
+        setMessage(error.response.data.message);
+      } else {
+        setMessage("Google signup failed. Try again.");
+      }
     }
-  } catch (error) {
-    console.error("Google Signup Error:", error);
-    if (error.response) {
-      setMessage(error.response.data.message);
-    } else {
-      setMessage("Google signup failed. Try again.");
-    }
-  }
-};
-
-
-
-
-
-
-
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-gray-800 text-white">
@@ -148,7 +161,7 @@ const googleSignup = async () => {
         </form>
 
         {message && (
-          <p className="mt-4 text-center text-sm text-red-400">{message}</p>
+          <p className="mt-4 text-center text-sm text-amber-400 font-medium">{message}</p>
         )}
 
         <p className="mt-6 text-center text-sm text-gray-400">

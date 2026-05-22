@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { AiOutlineShoppingCart } from "react-icons/ai";
-import { SlSliders } from "react-icons/sl"; // New icon for sleek filter switch button
-import { X } from "lucide-react";
+import { X, SlidersHorizontal } from "lucide-react"; // 👈 FIXED: Used SlidersHorizontal instead of SlSliders
 import { useDispatch } from "react-redux";
 import { addToCart, openCart } from "../redux/cartSlice.js"; 
 
@@ -10,7 +9,7 @@ export default function ProductGrid() {
   const dispatch = useDispatch();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false); // Mobile sheet viewport state variable
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false); 
 
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -76,7 +75,7 @@ export default function ProductGrid() {
     dispatch(openCart());
   };
 
-  // Reusable Filter Element component inside sheet matrices loops
+  // Reusable Filter Element
   const FilterElements = () => (
     <>
       {/* 1. CLOTHING STYLE TYPE FILTER */}
@@ -135,7 +134,7 @@ export default function ProductGrid() {
         </div>
       </div>
 
-      {/* Active Subcategory Feedback Badge Indicator */}
+      {/* Active Subcategory Feedback */}
       {subcatParam && (
         <div className="bg-amber-50/60 border border-amber-200/70 rounded-xl p-4 mt-6">
           <span className="text-[10px] text-amber-800 font-bold uppercase tracking-wider block mb-1.5">Active Tag Context:</span>
@@ -154,33 +153,26 @@ export default function ProductGrid() {
   return (
     <div className="max-w-[1440px] mx-auto px-4 py-10 sm:px-6 lg:px-12 min-h-screen bg-white">
       
-      {/* ========================================================
-          MOBILE FLOATING STICKY CONTROLLER FLUID GRID TRIGGER
-         ======================================================== */}
+      {/* MOBILE FLOATING STICKY BUTTON */}
       <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 lg:hidden">
         <button 
-          onClick={() => setIsOpen(true) || setIsMobileFilterOpen(true)}
+          onClick={() => setIsMobileFilterOpen(true)}
           className="bg-black text-white text-xs font-bold tracking-[2px] uppercase px-6 py-3.5 rounded-full flex items-center gap-2 shadow-2xl backdrop-blur-md bg-opacity-90 active:scale-95 transition-transform"
         >
-          <SlSliders size={14} className="text-[#C19A6B]" /> Filter & Sort
+          <SlidersHorizontal size={14} className="text-[#C19A6B]" /> Filter & Sort
         </button>
       </div>
 
       <div className="flex gap-10">
         
-        {/* ========================================================
-            DESKTOP SIDEBAR PANEL DISPLAY LAYOUT MATRIX 
-           ======================================================== */}
+        {/* DESKTOP SIDEBAR PANEL */}
         <div className="hidden lg:block w-[240px] shrink-0 border-r border-gray-100 pr-6 sticky top-28 h-fit">
           <FilterElements />
         </div>
 
-        {/* ========================================================
-            RIGHT VIEWPORT CONTAINER CONTAINER GRAPHICS
-           ======================================================== */}
+        {/* RIGHT VIEWPORT CONTAINER */}
         <div className="flex-1">
           
-          {/* Active Filtering Layout Header Metrics Grid Title context details */}
           <div className="mb-6 flex justify-between items-center text-xs text-gray-400 font-medium tracking-wide uppercase">
             <p>Collection Registry ({products.length} articles found)</p>
             {typeParam && <span className="bg-gray-100 border text-gray-800 px-2 py-0.5 rounded font-bold">{typeParam} view</span>}
@@ -206,14 +198,13 @@ export default function ProductGrid() {
                         className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
                       />
                       
-                      {/* Product Status Indicator Layout Element context */}
                       {item.status && item.status !== "normal" && (
                         <span className="absolute top-2 left-2 bg-black text-white text-[9px] font-bold uppercase tracking-wider px-2 py-1 rounded shadow-sm">
                           {item.status}
                         </span>
                       )}
 
-                      {/* Interactive floating slide cart action trigger element */}
+                      {/* Interactive floating cart action button */}
                       <button
                         onClick={(e) => handleAddToCart(e, item)}
                         className="absolute bottom-3 right-3 bg-white text-black p-3.5 rounded-full shadow-xl opacity-0 translate-y-3 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0 hover:bg-black hover:text-white active:scale-90"
@@ -222,7 +213,7 @@ export default function ProductGrid() {
                       </button>
                     </div>
 
-                    {/* INTERACTIVE DETAILS CARD TEXT VIEW PORT */}
+                    {/* CARD TEXT VIEW PORT */}
                     <div className="mt-4 px-1">
                       <p className="text-[10px] text-[#C19A6B] uppercase font-bold tracking-[2px] mb-1">
                         {item.styleType} Wear
@@ -256,18 +247,16 @@ export default function ProductGrid() {
 
       </div>
 
-      {/* ========================================================
-          MOBILE FLOATING DRAWER PANEL SHEET CONTAINER METRICS 
-         ======================================================== */}
+      {/* MOBILE FLOATING DRAWER PANEL SHEET */}
       {isMobileFilterOpen && (
         <div className="fixed inset-0 bg-black/50 z-50 lg:hidden flex items-end animate-fadeIn" onClick={() => setIsMobileFilterOpen(false)}>
           <div 
-            className="bg-white w-full rounded-t-3xl p-6 space-y-4 max-h-[80vh] overflow-y-auto transform transition-transform shadow-2xl animate-slideUp"
+            className="bg-white w-full rounded-t-3xl p-6 space-y-4 max-h-[80vh] overflow-y-auto transform transition-transform shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-between items-center border-b pb-4 mb-2">
               <h3 className="text-sm font-bold uppercase tracking-wider text-gray-900 flex items-center gap-2">
-                <SlSliders className="text-[#C19A6B]" /> Filter Configuration
+                <SlidersHorizontal size={14} className="text-[#C19A6B]" /> Filter Configuration
               </h3>
               <button onClick={() => setIsMobileFilterOpen(false)} className="p-1 rounded-full hover:bg-gray-100 text-gray-400 hover:text-black transition">
                 <X size={20} />

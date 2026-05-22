@@ -2,6 +2,9 @@ const modelSign = require("../../Models/sign.Model.js");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
+// ============================================
+// 1. SIGNUP USER (UPDATED WITH AUTOMATIC TOKEN)
+// ============================================
 const signupUser = async (req, res) => {
   const { name, email, password } = req.body;
   try {
@@ -14,12 +17,23 @@ const signupUser = async (req, res) => {
     const newUser = new modelSign({ name, email, password: hashedPassword });
     await newUser.save();
 
-    res.status(201).json({ message: "User registered successfully" });
+    // 💡 FIX: Generate token right after signup so auto-login works perfectly!
+    const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET || "defaultsecret", {
+      expiresIn: "1h",
+    });
+
+    res.status(201).json({ 
+      message: "User registered successfully ✅", 
+      token 
+    });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
+// ============================================
+// 2. LOGIN USER
+// ============================================
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
   try {
@@ -29,7 +43,7 @@ const loginUser = async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET || "defaultsecret", {
       expiresIn: "1h",
     });
 
@@ -39,11 +53,9 @@ const loginUser = async (req, res) => {
   }
 };
 
-
-// geogle signup
-
-// ✅ Google Signup/Login Controller
-// ✅ Google Signup/Login Controller
+// ============================================
+// 3. GOOGLE SIGNUP / LOGIN
+// ============================================
 const googleSignup = async (req, res) => {
   try {
     const { name, email } = req.body;
@@ -52,7 +64,7 @@ const googleSignup = async (req, res) => {
       return res.status(400).json({ message: "Email is required" });
     }
 
-    let user = await modelSign.findOne({ email }); // 👈 yaha galti thi, User ki jagah modelSign hoga
+    let user = await modelSign.findOne({ email });
 
     if (!user) {
       user = await modelSign.create({
@@ -63,7 +75,7 @@ const googleSignup = async (req, res) => {
 
     const token = jwt.sign(
       { id: user._id },
-      process.env.JWT_SECRET || "defaultsecret", // fallback in case .env missing
+      process.env.JWT_SECRET || "defaultsecret",
       { expiresIn: "1h" }
     );
 
@@ -77,46 +89,31 @@ const googleSignup = async (req, res) => {
       },
     });
   } catch (err) {
-    console.error("Google Signup Error:", err); // full error print hoga
+    console.error("Google Signup Error:", err);
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
 
-
-
-
-
-
-
-
-
-
-// Controller/Web/signController.js
-
+// ============================================
+// 4. LOGOUT USER (FIXED LOGICAL SCHEMA CRASH)
+// ============================================
 const logoutUser = async (req, res) => {
   try {
-    // frontend se token header me bhejna hoga: "Authorization: Bearer <token>"
     const token = req.header("Authorization")?.replace("Bearer ", "");
     if (!token) {
       return res.status(401).json({ message: "No token provided" });
     }
 
-    // token ko database se delete karna
-    await modelSign.findOneAndDelete({ token });
-
-    res.json({ message: "Logout successful" });
+    // 💡 FIX: Model has no token field, simply return success. Frontend clears token from localStorage.
+    res.json({ message: "Logout successful ✅" });
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
 
-
-
-
-
-
-// current user
-
+// ============================================
+// 5. GET CURRENT USER
+// ============================================
 const getUser = async (req, res) => {
   try {
     const user = await modelSign.findById(req.user.id).select("-password"); 
@@ -127,10 +124,5 @@ const getUser = async (req, res) => {
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
-
-
-
-
-
 
 module.exports = { signupUser, loginUser, googleSignup , getUser, logoutUser};
