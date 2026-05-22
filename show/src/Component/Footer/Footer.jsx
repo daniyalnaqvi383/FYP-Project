@@ -1,98 +1,171 @@
-import React from 'react';
-import { FaInstagram, FaFacebookF, FaTiktok, FaYoutube, FaArrowRight } from 'react-icons/fa';
+import React, { useState } from 'react'; // 👈 Updated with useState integration hook
+import { Link } from 'react-router-dom'; 
+import axios from 'axios'; // 👈 Imported axios for asynchronous database logging
+import { FaInstagram, FaFacebookF, FaTiktok, FaArrowRight } from 'react-icons/fa';
 
 const Footer = () => {
+  // ============================================
+  // NEWSLETTER TRACKING STATES
+  // ============================================
+  const [newsletterEmail, setNewsletterEmail] = useState("");
+  const [footerMsg, setFooterMsg] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  // ============================================
+  // DISPATCH SUBSCRIPTION EVENT HANDLER
+  // ============================================
+  const handleSubscribe = async (e) => {
+    e.preventDefault();
+    if (!newsletterEmail) return;
+
+    try {
+      setLoading(true);
+      setFooterMsg("");
+
+      const res = await axios.post("http://localhost:8030/api/subscribe", { 
+        email: newsletterEmail 
+      });
+
+      if (res.data.success) {
+        setFooterMsg(res.data.message); // Displays successful confirmation string
+        setNewsletterEmail(""); // Flushes tracking field cleanly
+      }
+    } catch (err) {
+      if (err.response && err.response.data) {
+        setFooterMsg(err.response.data.message); // Captures duplication/validation warnings
+      } else {
+        setFooterMsg("Subscription failed. Please try again later.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <footer className="bg-black text-white pt-20 pb-10 border-t border-gray-200">
-      <div className="max-w-[1400px] mx-auto px-6">
+    <footer className="bg-black text-white pt-16 pb-10 border-t border-zinc-800">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Top Section: Newsletter & Branding */}
-        <div className="flex flex-col lg:flex-row justify-between items-start mb-20 gap-12">
-          <div className="max-w-md">
-            <h2 className="text-2xl font-bold tracking-tighter mb-4 italic text-[#C19A6B]">BE THE FIRST TO KNOW</h2>
-            <p className="text-gray-500 text-sm mb-6">
+        {/* ========================================================
+            TOP SECTION: NEWSLETTER & BRANDING MATRIX
+           ======================================================== */}
+        <div className="flex flex-col lg:flex-row justify-between items-start mb-16 gap-10">
+          <div className="w-full lg:max-w-md">
+            <h2 className="text-xl sm:text-2xl font-bold tracking-tighter mb-3 italic text-[#C19A6B]">
+              BE THE FIRST TO KNOW
+            </h2>
+            <p className="text-gray-400 text-sm mb-5 leading-relaxed">
               Subscribe to get special offers, free giveaways, and once-in-a-lifetime deals.
             </p>
-            <div className="flex border-b border-white pb-2 group">
+
+            {/* 💡 SYNCHRONIZED INTERACTIVE FORM HANDLER BLOCK */}
+            <form onSubmit={handleSubscribe} className="flex border-b border-zinc-700 pb-2 group max-w-sm">
               <input 
                 type="email" 
+                value={newsletterEmail}
+                onChange={(e) => setNewsletterEmail(e.target.value)}
                 placeholder="Enter your email" 
-                className="bg-transparent outline-none w-full text-sm placeholder:text-white"
+                className="bg-transparent outline-none w-full text-sm placeholder:text-gray-500 text-white disabled:opacity-50"
+                disabled={loading}
+                required
               />
-              <button className="hover:translate-x-1 transition-transform duration-300">
+              <button 
+                type="submit" 
+                disabled={loading}
+                className="hover:translate-x-1 transition-transform duration-300 text-gray-400 hover:text-white disabled:opacity-50"
+              >
                 <FaArrowRight size={14} />
               </button>
-            </div>
+            </form>
+
+            {/* Dynamic Status Response Log Layer */}
+            {footerMsg && (
+              <p className="text-xs text-[#C19A6B] mt-2 font-medium tracking-wide animate-fadeIn">
+                {footerMsg}
+              </p>
+            )}
           </div>
 
-          <div className="flex flex-col items-end">
-             <h1 className="text-5xl font-black tracking-tighter mb-4">Me.</h1>
-             <div className="flex space-x-5">
-                <a href="#" className="p-2 border border-white rounded-full hover:bg-white hover:text-black transition-all duration-300"><FaInstagram size={16} /></a>
-                <a href="#" className="p-2 border border-white rounded-full hover:bg-white hover:text-black transition-all duration-300"><FaTiktok size={16} /></a>
-                <a href="#" className="p-2 border border-white rounded-full hover:bg-white hover:text-black transition-all duration-300"><FaFacebookF size={16} /></a>
+          {/* Social Profiles container block */}
+          <div className="flex flex-col items-start lg:items-end w-full lg:w-auto">
+             <h1 className="text-4xl sm:text-5xl font-black tracking-tighter mb-4">Me.</h1>
+             <div className="flex space-x-4">
+                <a href="#" className="p-2 border border-zinc-700 rounded-full text-gray-400 hover:bg-white hover:text-black hover:border-white transition-all duration-300"><FaInstagram size={15} /></a>
+                <a href="#" className="p-2 border border-zinc-700 rounded-full text-gray-400 hover:bg-white hover:text-black hover:border-white transition-all duration-300"><FaTiktok size={15} /></a>
+                <a href="#" className="p-2 border border-zinc-700 rounded-full text-gray-400 hover:bg-white hover:text-black hover:border-white transition-all duration-300"><FaFacebookF size={15} /></a>
              </div>
           </div>
         </div>
 
-        {/* Middle Section: Links Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-20">
+        {/* ========================================================
+            MIDDLE SECTION: FLUID DYNAMIC LINKS GRID LAYOUT
+           ======================================================== */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mb-16 pt-10 border-t border-zinc-900">
+          
+          {/* COLUMN 1: SHOP NAVIGATION LINKS */}
           <div>
-            <h4 className="font-bold text-xs uppercase tracking-[0.2em] mb-6">Shop</h4>
-            <ul className="space-y-3 text-sm text-gray-600 font-medium">
-              <li><a href="#" className="hover:text-[#C19A6B] transition-colors">New Arrivals</a></li>
-              <li><a href="#" className="hover:text-[#C19A6B] transition-colors">Best Sellers</a></li>
-              <li><a href="#" className="hover:text-[#C19A6B] transition-colors">Men's Collection</a></li>
-              <li><a href="#" className="hover:text-[#C19A6B] transition-colors">Women's Collection</a></li>
-              <li><a href="#" className="hover:text-[#C19A6B] transition-colors">Accessories</a></li>
+            <h4 className="font-bold text-xs uppercase tracking-[0.2em] mb-4 text-gray-300">Shop</h4>
+            <ul className="space-y-2.5 text-sm text-gray-400 font-medium">
+              <li><Link to="/shop" className="hover:text-[#C19A6B] transition-colors">New Arrivals</Link></li>
+              <li><Link to="/shop?productType=featured" className="hover:text-[#C19A6B] transition-colors">Best Sellers</Link></li>
+              <li><Link to="/shop?category=men" className="hover:text-[#C19A6B] transition-colors">Men's Collection</Link></li>
+              <li><Link to="/shop?category=women" className="hover:text-[#C19A6B] transition-colors">Women's Collection</Link></li>
+              <li><Link to="/shop?category=accessories" className="hover:text-[#C19A6B] transition-colors">Accessories</Link></li>
             </ul>
           </div>
 
+          {/* COLUMN 2: CUSTOMER CARE */}
           <div>
-            <h4 className="font-bold text-xs uppercase tracking-[0.2em] mb-6">Customer Care</h4>
-            <ul className="space-y-3 text-sm text-gray-600 font-medium">
+            <h4 className="font-bold text-xs uppercase tracking-[0.2em] mb-4 text-gray-300">Customer Care</h4>
+            <ul className="space-y-2.5 text-sm text-gray-400 font-medium">
               <li><a href="#" className="hover:text-[#C19A6B] transition-colors">Track Your Order</a></li>
               <li><a href="#" className="hover:text-[#C19A6B] transition-colors">Shipping Policy</a></li>
-              <li><a href="#" className="hover:text-[#C19A6B] transition-colors">Returns & Exchanges</a></li>
+              <li><Link to="/return-exchange" className="hover:text-[#C19A6B] transition-colors">Returns & Exchanges</Link></li>
               <li><a href="#" className="hover:text-[#C19A6B] transition-colors">FAQs</a></li>
             </ul>
           </div>
 
+          {/* COLUMN 3: BRAND STORY */}
           <div>
-            <h4 className="font-bold text-xs uppercase tracking-[0.2em] mb-6">Our Story</h4>
-            <ul className="space-y-3 text-sm text-gray-600 font-medium">
-              <li><a href="#" className="hover:text-[#C19A6B] transition-colors">About Breakout</a></li>
+            <h4 className="font-bold text-xs uppercase tracking-[0.2em] mb-4 text-gray-300">Our Story</h4>
+            <ul className="space-y-2.5 text-sm text-gray-400 font-medium">
+              <li><a href="#" className="hover:text-[#C19A6B] transition-colors">About Us</a></li>
               <li><a href="#" className="hover:text-[#C19A6B] transition-colors">Sustainability</a></li>
               <li><a href="#" className="hover:text-[#C19A6B] transition-colors">Store Locator</a></li>
               <li><a href="#" className="hover:text-[#C19A6B] transition-colors">Careers</a></li>
             </ul>
           </div>
 
-          <div className="bg-black p-6 rounded-lg">
-            <h4 className="font-bold text-xs uppercase tracking-[0.2em] mb-4 text-white">Contact Us</h4>
-            <div className="space-y-4 text-sm">
-              <p className="text-gray-600 leading-relaxed">
+          {/* COLUMN 4: CONTACT US CARD HOUSING */}
+          <div className="bg-zinc-950 p-5 rounded-xl border border-zinc-900/80">
+            <h4 className="font-bold text-xs uppercase tracking-[0.2em] mb-3 text-white">Contact Us</h4>
+            <div className="space-y-3 text-sm">
+              <p className="text-gray-400 text-xs leading-relaxed">
                 Need help? Our team is available <br/> 
-                <span className="font-bold text-black italic">Mon-Sat (10am - 6pm)</span>
+                <span className="font-semibold text-zinc-300 italic">Mon-Sat (10am - 6pm)</span>
               </p>
-              <p className="font-bold text-lg">+92 311 1100439</p>
-              <p className="underline underline-offset-4 cursor-pointer hover:text-gray-500 transition-colors">support@breakout.com</p>
+              <p className="font-bold text-base text-white tracking-wide">+92 311 1100439</p>
+              <p className="text-xs underline underline-offset-4 cursor-pointer text-[#C19A6B] hover:text-white transition-colors break-all">
+                support@me.com
+              </p>
             </div>
           </div>
         </div>
 
-        {/* Bottom Section */}
-        <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-gray-100">
-          <p className="text-[10px] text-gray-400 uppercase tracking-widest">
-            © 2026 BREAKOUT CLOTHING CO. ALL RIGHTS RESERVED.
+        {/* ========================================================
+            BOTTOM SECTION: COPYRIGHTS & CREDITS MAPPING
+           ======================================================== */}
+        <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-zinc-900 gap-4">
+          <p className="text-[10px] text-gray-500 uppercase tracking-widest text-center md:text-left">
+            © 2026 ME CLOTHING CO. ALL RIGHTS RESERVED.
           </p>
-          <div className="flex items-center space-x-6 mt-4 md:mt-0 opacity-40">
-             <span className="text-[10px] font-bold">VISA</span>
-             <span className="text-[10px] font-bold">MASTERCARD</span>
-             <span className="text-[10px] font-bold">APPLE PAY</span>
-             <span className="text-[10px] font-bold">CASH ON DELIVERY</span>
+          <div className="flex flex-wrap justify-center items-center gap-4 opacity-40 text-gray-400 select-none">
+             <span className="text-[9px] font-bold tracking-wider">VISA</span>
+             <span className="text-[9px] font-bold tracking-wider">MASTERCARD</span>
+             <span className="text-[9px] font-bold tracking-wider">APPLE PAY</span>
+             <span className="text-[9px] font-bold tracking-wider">CASH ON DELIVERY</span>
           </div>
         </div>
+
       </div>
     </footer>
   );
