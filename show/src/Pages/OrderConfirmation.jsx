@@ -1,6 +1,6 @@
 import React from "react";
 import { useLocation, Link } from "react-router-dom";
-import { CheckCircle, MapPin, CreditCard, ShoppingBag, ArrowRight } from "lucide-react";
+import { CheckCircle, MapPin, CreditCard, ShoppingBag, ArrowRight, ShieldAlert } from "lucide-react"; // 👈 FIXED: Imported ShieldAlert here to resolve compile/crash layout error
 
 function OrderConfirmation() {
   const location = useLocation();

@@ -4,7 +4,7 @@ import { HelpCircle } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { clearCart } from "../redux/cartSlice.js"; 
-// NEW: Toastify Imports
+// Toastify Imports
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -119,7 +119,7 @@ function Checkout() {
         name: item.name,
         price: Number(item.price),
         quantity: Number(item.quantity || 1),
-        size: item.size || "M",
+        size: item.size || "M", // 👈 Synced payload execution parameters safely
         image: item.image,
       })),
       totalAmount: totalAmount,
@@ -136,14 +136,10 @@ function Checkout() {
           toast.success("💳 Transaction Authorized! Order successfully placed.", { position: "top-right" });
         }
         
-        // Dynamic payload state object transfer mapping
         const savedOrderDetails = response.data.order; 
 
-        // Toastify alert check timeline ke baad dynamic forward redirect state logic
         setTimeout(() => {
-          dispatch(clearCart()); // Order capture hone k baad cart empty karein
-          
-          // Dynamic data forward redirect matching standard routing props
+          dispatch(clearCart()); 
           navigate("/order-confirmation", { state: { order: savedOrderDetails } }); 
         }, 2000);
       }
@@ -155,10 +151,8 @@ function Checkout() {
 
   return (
     <div className="min-h-screen bg-white text-gray-800 font-sans antialiased">
-      {/* NEW: Toast Notification Container Component Popup Layer */}
       <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} theme="colored" />
       
-      {/* TWO COLUMN CONTAINER */}
       <div className="max-w-[1250px] mx-auto grid grid-cols-1 lg:grid-cols-12 min-h-screen">
         
         {/* LEFT COLUMN: CUSTOMER INPUT INFO */}
@@ -531,7 +525,7 @@ function Checkout() {
 
                   <div className="flex-1 min-w-0">
                     <h3 className="text-gray-800 font-normal tracking-tight text-xs leading-tight">{item.name}</h3>
-                    <p className="text-[10px] text-gray-400 mt-1 uppercase tracking-wide">{item.size || "S"}</p>
+                    <p className="text-[10px] text-gray-400 mt-1 uppercase tracking-wide">{item.size || "M"}</p>
                   </div>
 
                   <span className="text-gray-700 font-medium shrink-0">

@@ -1,20 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Menu, X, ShoppingCart, Search, User, Plus, Minus, ChevronDown } from "lucide-react";
-import { Link, Links } from "react-router-dom";
+import { Link } from "react-router-dom"; // 👈 FIXED: Cleaned duplicate broken 'Links' import syntax
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
-// Make sure these are exported in your cartSlice.js
 import { removeFromCart, openCart, closeCart, addToCart } from "../../redux/cartSlice.js"; 
-import CartPage from "../../Pages/Cartpage.jsx";
-import Checkout from "../../Pages/Checkout.jsx";
-
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState(null);
   const [dropdown, setDropdown] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
-   const [mobileDropdown, setMobileDropdown] = useState("");
+  const [mobileDropdown, setMobileDropdown] = useState("");
 
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.items);
@@ -99,123 +95,109 @@ function Navbar() {
             <span className="text-2xl font-bold tracking-tighter">Me</span>
           </Link>
 
-           {/* MENU */}
-{/* MENU */}
-<div className="hidden md:flex items-center space-x-8 font-medium text-gray-800 relative">
+          {/* DESKTOP MENU */}
+          <div className="hidden md:flex items-center space-x-8 font-medium text-gray-800 relative">
 
-  <Link
-    to="/"
-    className="relative group transition duration-300 hover:text-[#C19A6B]"
-  >
-    Home
-    {/* underline animation */}
-    <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-[#C19A6B] transition-all duration-300 group-hover:w-full"></span>
-  </Link>
+            <Link
+              to="/"
+              className="relative group transition duration-300 hover:text-[#C19A6B]"
+            >
+              Home
+              {/* underline animation */}
+              <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-[#C19A6B] transition-all duration-300 group-hover:w-full"></span>
+            </Link>
 
-  {/* MEN */}
-  <div className="relative group">
-    <button className="flex items-center gap-1 hover:text-[#C19A6B] transition">
-      Men
-      <ChevronDown size={16} className="transition-transform duration-300 group-hover:rotate-180" />
-    </button>
+            {/* MEN */}
+            <div className="relative group">
+              <button className="flex items-center gap-1 hover:text-[#C19A6B] transition">
+                Men
+                <ChevronDown size={16} className="transition-transform duration-300 group-hover:rotate-180" />
+              </button>
 
-    <div className="absolute top-10 left-0 w-64 bg-white shadow-2xl rounded-2xl p-6 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 border border-gray-100">
+              <div className="absolute top-10 left-0 w-64 bg-white shadow-2xl rounded-2xl p-6 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 border border-gray-100">
+                <div className="mb-5">
+                  <h3 className="font-bold text-gray-900 mb-3 uppercase text-sm tracking-wider">
+                    Eastern
+                  </h3>
+                  <Link to="/shop?category=men&styleType=eastern&subcategory=kurta" className="block py-2 text-gray-600 hover:text-[#C19A6B]">
+                    Men Kurta
+                  </Link>
+                </div>
+                <div>
+                  <h3 className="font-bold text-gray-900 mb-3 uppercase text-sm tracking-wider">
+                    Western
+                  </h3>
+                  <Link to="/shop?category=men&styleType=western&subcategory=polo" className="block py-2 text-gray-600 hover:text-[#C19A6B]">
+                    Men Polo
+                  </Link>
+                  <Link to="/shop?category=men&styleType=western&subcategory=shirt" className="block py-2 text-gray-600 hover:text-[#C19A6B]">
+                    Men Shirt
+                  </Link>
+                  <Link to="/shop?category=men&styleType=western&subcategory=jeans" className="block py-2 text-gray-600 hover:text-[#C19A6B]">
+                    Men Jeans
+                  </Link>
+                </div>
+              </div>
+            </div>
 
-      <div className="mb-5">
-        <h3 className="font-bold text-gray-900 mb-3 uppercase text-sm tracking-wider">
-          Eastern
-        </h3>
-        {/* 💡 FIX: Query routing mapping for Eastern Men Kurta */}
-        <Link to="/shop?category=men&styleType=eastern&subcategory=kurta" className="block py-2 text-gray-600 hover:text-[#C19A6B]">
-          Men Kurta
-        </Link>
-      </div>
+            {/* WOMEN */}
+            <div className="relative group">
+              <button className="flex items-center gap-1 hover:text-[#C19A6B] transition">
+                Women
+                <ChevronDown size={16} className="transition-transform duration-300 group-hover:rotate-180" />
+              </button>
 
-      <div>
-        <h3 className="font-bold text-gray-900 mb-3 uppercase text-sm tracking-wider">
-          Western
-        </h3>
-        {/* 💡 FIX: Query routing mapping for Western Men Articles */}
-        <Link to="/shop?category=men&styleType=western&subcategory=polo" className="block py-2 text-gray-600 hover:text-[#C19A6B]">
-          Men Polo
-        </Link>
-        <Link to="/shop?category=men&styleType=western&subcategory=shirt" className="block py-2 text-gray-600 hover:text-[#C19A6B]">
-          Men Shirt
-        </Link>
-        <Link to="/shop?category=men&styleType=western&subcategory=jeans" className="block py-2 text-gray-600 hover:text-[#C19A6B]">
-          Men Jeans
-        </Link>
-      </div>
+              <div className="absolute top-10 left-0 w-64 bg-white shadow-2xl rounded-2xl p-6 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 border border-gray-100">
+                <div className="mb-5">
+                  <h3 className="font-bold text-gray-900 mb-3 uppercase text-sm tracking-wider">
+                    Eastern
+                  </h3>
+                  <Link to="/shop?category=women&styleType=eastern&subcategory=suit" className="block py-2 text-gray-600 hover:text-[#C19A6B]">
+                    Women Suit
+                  </Link>
+                </div>
+                <div>
+                  <h3 className="font-bold text-gray-900 mb-3 uppercase text-sm tracking-wider">
+                    Western
+                  </h3>
+                  <Link to="/shop?category=women&styleType=western&subcategory=polo" className="block py-2 text-gray-600 hover:text-[#C19A6B]">
+                    Women Polo
+                  </Link>
+                  <Link to="/shop?category=women&styleType=western&subcategory=shirt" className="block py-2 text-gray-600 hover:text-[#C19A6B]">
+                    Women Shirt
+                  </Link>
+                </div>
+              </div>
+            </div>
 
-    </div>
-  </div>
+            {/* KIDS */}
+            <div className="relative group">
+              <button className="flex items-center gap-1 hover:text-[#C19A6B] transition">
+                Kids
+                <ChevronDown size={16} className="transition-transform duration-300 group-hover:rotate-180" />
+              </button>
 
-  {/* WOMEN */}
-  <div className="relative group">
-    <button className="flex items-center gap-1 hover:text-[#C19A6B] transition">
-      Women
-      <ChevronDown size={16} className="transition-transform duration-300 group-hover:rotate-180" />
-    </button>
+              <div className="absolute top-10 left-0 w-56 bg-white shadow-2xl rounded-2xl p-6 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 border border-gray-100">
+                <Link to="/shop?category=kids&subcategory=boys" className="block py-2 text-gray-600 hover:text-[#C19A6B]">
+                  Boys Collection
+                </Link>
+                <Link to="/shop?category=kids&subcategory=girls" className="block py-2 text-gray-600 hover:text-[#C19A6B]">
+                  Girls Collection
+                </Link>
+              </div>
+            </div>
 
-    <div className="absolute top-10 left-0 w-64 bg-white shadow-2xl rounded-2xl p-6 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 border border-gray-100">
+            {/* SALE */}
+            <Link to="/shop?productType=trending" className="text-red-500 font-semibold hover:text-red-600 transition">
+              Sales
+            </Link>
 
-      <div className="mb-5">
-        <h3 className="font-bold text-gray-900 mb-3 uppercase text-sm tracking-wider">
-          Eastern
-        </h3>
-        {/* 💡 FIX: Query routing mapping for Eastern Women Suit */}
-        <Link to="/shop?category=women&styleType=eastern&subcategory=suit" className="block py-2 text-gray-600 hover:text-[#C19A6B]">
-          Women Suit
-        </Link>
-      </div>
+            {/* RETURN */}
+            <Link to="/return-exchange" className="hover:text-[#C19A6B] transition">
+              Return & Exchange
+            </Link>
 
-      <div>
-        <h3 className="font-bold text-gray-900 mb-3 uppercase text-sm tracking-wider">
-          Western
-        </h3>
-        {/* 💡 FIX: Query routing mapping for Western Women Articles */}
-        <Link to="/shop?category=women&styleType=western&subcategory=polo" className="block py-2 text-gray-600 hover:text-[#C19A6B]">
-          Women Polo
-        </Link>
-        <Link to="/shop?category=women&styleType=western&subcategory=shirt" className="block py-2 text-gray-600 hover:text-[#C19A6B]">
-          Women Shirt
-        </Link>
-      </div>
-
-    </div>
-  </div>
-
-  {/* KIDS */}
-  <div className="relative group">
-    <button className="flex items-center gap-1 hover:text-[#C19A6B] transition">
-      Kids
-      <ChevronDown size={16} className="transition-transform duration-300 group-hover:rotate-180" />
-    </button>
-
-    <div className="absolute top-10 left-0 w-56 bg-white shadow-2xl rounded-2xl p-6 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 border border-gray-100">
-      {/* 💡 FIX: Query routing mapping for Kids */}
-      <Link to="/shop?category=kids&subcategory=boys" className="block py-2 text-gray-600 hover:text-[#C19A6B]">
-        Boys Collection
-      </Link>
-      <Link to="/shop?category=kids&subcategory=girls" className="block py-2 text-gray-600 hover:text-[#C19A6B]">
-        Girls Collection
-      </Link>
-    </div>
-  </div>
-
-  {/* SALE */}
-  {/* 💡 FIX: Status check router endpoint map */}
-  <Link to="/shop?productType=trending" className="text-red-500 font-semibold hover:text-red-600 transition">
-    Sales
-  </Link>
-
-  {/* RETURN */}
-  <Link to="/return-exchange" className="hover:text-[#C19A6B] transition">
-    Return & Exchange
-  </Link>
-
-</div>
-
+          </div>
 
           {/* ICONS */}
           <div className="flex items-center space-x-3 md:space-x-5">
@@ -296,10 +278,7 @@ function Navbar() {
                 const itemQty = item.quantity || 1;
                 return (
                   <div key={index} className="flex gap-4 border-b border-gray-100 pb-5 last:border-0 last:pb-0">
-                    {/* Product Image */}
                     <img src={item.image} className="w-20 h-24 object-cover bg-gray-50" alt={item.name} />
-                    
-                    {/* Product Info */}
                     <div className="flex-1 flex flex-col justify-between">
                       <div>
                         <h3 className="text-xs font-normal text-gray-800 tracking-tight leading-tight pr-4">
@@ -307,10 +286,7 @@ function Navbar() {
                         </h3>
                         <p className="text-[11px] text-gray-400 mt-1">Size: {item.size}</p>
                       </div>
-
-                      {/* Counter Box and Price Row */}
                       <div className="flex items-center justify-between mt-2">
-                        {/* EXACT SCREENSHOT MATCH QUANTITY SELECTOR */}
                         <div className="flex items-center border border-gray-200 h-7 rounded bg-white">
                           <button 
                             onClick={() => handleDecreaseQuantity(index, itemQty)}
@@ -328,8 +304,6 @@ function Navbar() {
                             <Plus size={10} />
                           </button>
                         </div>
-
-                        {/* Price */}
                         <span className="text-xs font-medium text-gray-700">
                           Rs.{item.price}
                         </span>
@@ -341,7 +315,7 @@ function Navbar() {
             )}
           </div>
 
-          {/* TOTAL & CHECKOUT SECTION (PERMANENTLY LOCKED AT BOTTOM) */}
+          {/* TOTAL & CHECKOUT SECTION */}
           <div className="w-full p-5 border-t border-gray-100 bg-white shadow-[0_-4px_20px_rgba(0,0,0,0.02)]">
             {cartItems.length > 0 && (
               <div className="flex justify-between mb-5 font-medium text-xs uppercase tracking-wider text-gray-500">
@@ -358,7 +332,7 @@ function Navbar() {
         </div>
       </div>
 
-      {/* MOBILE MENU */}
+      {/* MOBILE MENU (UPDATED MATRIX WITH QUERY ROUTING MATCHES) */}
       <div
         className={`fixed inset-0 bg-black/50 md:hidden ${isOpen ? "visible" : "hidden"}`}
         onClick={() => setIsOpen(false)}
@@ -369,42 +343,33 @@ function Navbar() {
           }`}
           onClick={(e) => e.stopPropagation()}
         >
-
           <div className="flex justify-between mb-5">
             <h2 className="font-bold">Menu</h2>
             <X onClick={() => setIsOpen(false)} />
           </div>
 
           <div className="flex flex-col gap-4">
-
             <Link to="/" onClick={() => setIsOpen(false)}>Home</Link>
 
             {/* MEN */}
             <div>
               <button
-                onClick={() =>
-                  setMobileDropdown(mobileDropdown === "men" ? "" : "men")
-                }
+                onClick={() => setMobileDropdown(mobileDropdown === "men" ? "" : "men")}
                 className="flex items-center justify-between w-full font-medium"
               >
                 Men
-                <ChevronDown
-                  size={16}
-                  className={`transition-transform ${
-                    mobileDropdown === "men" ? "rotate-180" : ""
-                  }`}
-                />
+                <ChevronDown size={16} className={`transition-transform ${mobileDropdown === "men" ? "rotate-180" : ""}`} />
               </button>
 
               {mobileDropdown === "men" && (
                 <div className="pl-3 mt-2 flex flex-col gap-2 text-sm">
-                  <p className="font-semibold">Eastern</p>
-                  <Link to="/men/kurta" onClick={() => setIsOpen(false)}>Kurta</Link>
+                  <p className="font-semibold text-xs text-gray-400 uppercase tracking-wider">Eastern</p>
+                  <Link to="/shop?category=men&styleType=eastern&subcategory=kurta" onClick={() => setIsOpen(false)}>Kurta</Link>
 
-                  <p className="font-semibold mt-2">Western</p>
-                  <Link to="/men/polo" onClick={() => setIsOpen(false)}>Polo</Link>
-                  <Link to="/men/shirt" onClick={() => setIsOpen(false)}>Shirt</Link>
-                  <Link to="/men/jeans" onClick={() => setIsOpen(false)}>Jeans</Link>
+                  <p className="font-semibold text-xs text-gray-400 uppercase tracking-wider mt-2">Western</p>
+                  <Link to="/shop?category=men&styleType=western&subcategory=polo" onClick={() => setIsOpen(false)}>Polo</Link>
+                  <Link to="/shop?category=men&styleType=western&subcategory=shirt" onClick={() => setIsOpen(false)}>Shirt</Link>
+                  <Link to="/shop?category=men&styleType=western&subcategory=jeans" onClick={() => setIsOpen(false)}>Jeans</Link>
                 </div>
               )}
             </div>
@@ -412,28 +377,21 @@ function Navbar() {
             {/* WOMEN */}
             <div>
               <button
-                onClick={() =>
-                  setMobileDropdown(mobileDropdown === "women" ? "" : "women")
-                }
+                onClick={() => setMobileDropdown(mobileDropdown === "women" ? "" : "women")}
                 className="flex items-center justify-between w-full font-medium"
               >
                 Women
-                <ChevronDown
-                  size={16}
-                  className={`transition-transform ${
-                    mobileDropdown === "women" ? "rotate-180" : ""
-                  }`}
-                />
+                <ChevronDown size={16} className={`transition-transform ${mobileDropdown === "women" ? "rotate-180" : ""}`} />
               </button>
 
               {mobileDropdown === "women" && (
                 <div className="pl-3 mt-2 flex flex-col gap-2 text-sm">
-                  <p className="font-semibold">Eastern</p>
-                  <Link to="/women/suit" onClick={() => setIsOpen(false)}>Suit</Link>
+                  <p className="font-semibold text-xs text-gray-400 uppercase tracking-wider">Eastern</p>
+                  <Link to="/shop?category=women&styleType=eastern&subcategory=suit" onClick={() => setIsOpen(false)}>Suit</Link>
 
-                  <p className="font-semibold mt-2">Western</p>
-                  <Link to="/women/polo" onClick={() => setIsOpen(false)}>Polo</Link>
-                  <Link to="/women/shirt" onClick={() => setIsOpen(false)}>Shirt</Link>
+                  <p className="font-semibold text-xs text-gray-400 uppercase tracking-wider mt-2">Western</p>
+                  <Link to="/shop?category=women&styleType=western&subcategory=polo" onClick={() => setIsOpen(false)}>Polo</Link>
+                  <Link to="/shop?category=women&styleType=western&subcategory=shirt" onClick={() => setIsOpen(false)}>Shirt</Link>
                 </div>
               )}
             </div>
@@ -441,30 +399,22 @@ function Navbar() {
             {/* KIDS */}
             <div>
               <button
-                onClick={() =>
-                  setMobileDropdown(mobileDropdown === "kids" ? "" : "kids")
-                }
+                onClick={() => setMobileDropdown(mobileDropdown === "kids" ? "" : "kids")}
                 className="flex items-center justify-between w-full font-medium"
               >
                 Kids
-                <ChevronDown
-                  size={16}
-                  className={`transition-transform ${
-                    mobileDropdown === "kids" ? "rotate-180" : ""
-                  }`}
-                />
+                <ChevronDown size={16} className={`transition-transform ${mobileDropdown === "kids" ? "rotate-180" : ""}`} />
               </button>
 
               {mobileDropdown === "kids" && (
                 <div className="pl-3 mt-2 flex flex-col gap-2 text-sm">
-                  <Link to="/kids/boys" onClick={() => setIsOpen(false)}>Boys</Link>
-                  <Link to="/kids/girls" onClick={() => setIsOpen(false)}>Girls</Link>
-                  <Link to="/kids/newborn" onClick={() => setIsOpen(false)}>New Born</Link>
+                  <Link to="/shop?category=kids&subcategory=boys" onClick={() => setIsOpen(false)}>Boys Collection</Link>
+                  <Link to="/shop?category=kids&subcategory=girls" onClick={() => setIsOpen(false)}>Girls Collection</Link>
                 </div>
               )}
             </div>
 
-            <Link to="/sale" onClick={() => setIsOpen(false)} className="text-red-500">
+            <Link to="/shop?productType=trending" onClick={() => setIsOpen(false)} className="text-red-500 font-semibold">
               Sale
             </Link>
 
