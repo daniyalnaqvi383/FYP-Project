@@ -14,32 +14,34 @@ const Footer = () => {
   // ============================================
   // DISPATCH SUBSCRIPTION EVENT HANDLER
   // ============================================
-  const handleSubscribe = async (e) => {
-    e.preventDefault();
-    if (!newsletterEmail) return;
+  // Footer.jsx ke andar handleSubscribe function ko is sahi URL par map karein:
+const handleSubscribe = async (e) => {
+  e.preventDefault();
+  if (!newsletterEmail) return;
 
-    try {
-      setLoading(true);
-      setFooterMsg("");
+  try {
+    setLoading(true);
+    setFooterMsg("");
 
-      const res = await axios.post("http://localhost:8030/api/subscribe", { 
-        email: newsletterEmail 
-      });
+    // 💡 FIX: Added '/subscriber' in the path to match index.js exactly
+    const res = await axios.post("http://localhost:8030/api/subscriber/subscribe", { 
+      email: newsletterEmail 
+    });
 
-      if (res.data.success) {
-        setFooterMsg(res.data.message); // Displays successful confirmation string
-        setNewsletterEmail(""); // Flushes tracking field cleanly
-      }
-    } catch (err) {
-      if (err.response && err.response.data) {
-        setFooterMsg(err.response.data.message); // Captures duplication/validation warnings
-      } else {
-        setFooterMsg("Subscription failed. Please try again later.");
-      }
-    } finally {
-      setLoading(false);
+    if (res.data.success) {
+      setFooterMsg(res.data.message);
+      setNewsletterEmail("");
     }
-  };
+  } catch (err) {
+    if (err.response && err.response.data) {
+      setFooterMsg(err.response.data.message);
+    } else {
+      setFooterMsg("Subscription failed. Please try again later.");
+    }
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <footer className="bg-black text-white pt-16 pb-10 border-t border-zinc-800">
