@@ -9,6 +9,7 @@ import Cartpage from './Pages/Cartpage';
 import Checkout from './Pages/Checkout';
 import OrderConfirmation from './Pages/OrderConfirmation';
 import ProductGrid from './Pages/ProductGrid';
+import Chatbot from './Component/Chatbot/Chatbot';
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
 
 
       </Routes>
+      <Chatbot/>
     </>
   );
 }
