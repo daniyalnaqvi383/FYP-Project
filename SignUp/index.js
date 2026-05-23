@@ -8,6 +8,7 @@ const adminRoute = require("./App/Routes/Admin/AdminRoutes.js");
 const { default: ProductRoutes } = require("./App/Routes/Admin/ProductRoutes.js");
 const { default: orderRoutes } = require("./App/Routes/Admin/orderRoutes.js");
 const subscriberRouter = require("./App/Routes/Web/subscriberRoutes.js");
+const chatRouter = require("./App/Routes/Web/chatRoutes.js");
 
 const app = express();
 
@@ -35,6 +36,8 @@ app.use("/api/admin", adminRoute);
 app.use("/api/product",ProductRoutes)
 app.use("/api/orders", orderRoutes);
 app.use("/api/subscriber", subscriberRouter);
+
+app.use("/api", chatRouter);
 
 mongoose
   .connect(process.env.DB_URL)
