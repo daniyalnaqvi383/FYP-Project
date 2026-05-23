@@ -25,7 +25,7 @@ export default function Chatbot() {
     // 1. User ka message screen par add karein
     setMessages((prev) => [...prev, { sender: "user", text: userMessage }]);
     setInput("");
-    setLoading(true);
+     setLoading(true);
 
     try {
       // 2. Backend API call
@@ -34,10 +34,20 @@ export default function Chatbot() {
       if (res.data.success) {
         // 3. Bot ka reply screen par add karein
         setMessages((prev) => [...prev, { sender: "bot", text: res.data.reply }]);
+      } else {
+        // Backend failure logic capture
+        setMessages((prev) => [...prev, { sender: "bot", text: `❌ BACKEND ERROR: ${res.data.message || "Unknown State"}` }]);
       }
     } catch (error) {
       console.error("Chatbot frontend error:", error);
-      setMessages((prev) => [...prev, { sender: "bot", text: "Sorry, facing some connection limits. Please try again!" }]);
+      
+      // 💡 DYNAMIC ERROR EXTRACTOR: Catch blocks ke real exceptions display karne ke liye
+      const extractedError = error.response?.data?.error || error.response?.data?.message || error.message;
+      
+      setMessages((prev) => [
+        ...prev, 
+        { sender: "bot", text: `🔴 API CRASH ALERT => ${extractedError}` }
+      ]);
     } finally {
       setLoading(false);
     }
@@ -87,6 +97,8 @@ export default function Chatbot() {
                   className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-xs sm:text-sm shadow-sm leading-relaxed ${
                     msg.sender === "user"
                       ? "bg-black text-white rounded-tr-none"
+                      : msg.text.startsWith("🔴") || msg.text.startsWith("❌")
+                      ? "bg-red-50 text-red-600 border border-red-200 rounded-tl-none font-mono"
                       : "bg-white text-gray-800 border border-gray-100 rounded-tl-none"
                   }`}
                 >

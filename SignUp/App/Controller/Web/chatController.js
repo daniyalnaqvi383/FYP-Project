@@ -1,5 +1,4 @@
-// 💡 THE ULTRA STABLE FIX: Import the direct generation method wrapper
-const { GoogleGenAI } = require("@google/generative-ai");
+const Groq = require("groq-sdk");
 
 const handleBotChat = async (req, res) => {
   try {
@@ -9,34 +8,44 @@ const handleBotChat = async (req, res) => {
       return res.status(400).json({ success: false, message: "Message is required" });
     }
 
-    const apiKey = process.env.GEMINI_API_KEY;
+    const apiKey = process.env.GROQ_API_KEY;
     if (!apiKey) {
-      console.log("❌ CRITICAL: GEMINI_API_KEY is missing inside your .env file!");
-      return res.status(500).json({ success: false, message: "API key environment configuration missing" });
+      return res.status(200).json({ 
+        success: true, 
+        reply: "❌ CONFIG ERROR: GROQ_API_KEY is missing!" 
+      });
     }
 
-    // 💡 NEW INDUSTRY STANDARD: Instantiate the client with correct option block formatting
-    const ai = new GoogleGenAI({ apiKey: apiKey });
-    
-    // Stable production model allocation mapping channel
-    const model = ai.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const groq = new Groq({ apiKey: apiKey });
 
-    // Chatbot configuration behavior engine prompt
+    // 💡 THE ULTIMATE FASHION EXPERT PROMPT: Training the model on elite clothing knowledge
     const systemPrompt = `
-      You are a smart, professional, and friendly AI fashion assistant for an e-commerce clothing brand named "Me.".
-      Your goals are:
-      1. Help users choose the right clothing (Eastern wear like Kurtas/Suits, Western wear like Polos/Shirts/Jeans).
-      2. Provide sizing tips, color recommendations, and style coordination ideas.
-      3. Keep your answers brief, engaging, and directly related to clothing, fashion trends, or store policies (like 7-day easy exchange/returns).
-      4. Always match the helpful peer vibe. If the user greets you in Hinglish/Urdu, reply warmly in a mix of Urdu/English (Hinglish), otherwise use professional English.
+      You are the elite, ultra-stylish Lead Fashion Consultant for the premium clothing brand "Me.". 
+      Your tone must be confident, friendly, and deeply knowledgeable about clothing, fabrics, color coordination, and sizing.
       
-      User message: ${message}
+      CRITICAL BRAND KNOWLEDGE & VIBE:
+      1. STYLE EXPERTISE: 
+         - Eastern Wear: Talk about Premium Cotton/Wash & Wear Kurtas, Shalwar Kameez (White, Black, Navy, Olive, Charcoal tones). Focus on crisp collars, hidden plackets, and classy look.
+         - Western Wear: Talk about Slim-fit Premium Polos, Casual Oxford Shirts, Tailored Chinos, and Dark-wash Denim Jeans.
+      2. COLOR COORDINATION RULES: Know what looks good. (e.g., Black Kurta with Maroon waistcoat, Navy Polo with Beige Chinos, White shirt with Ice-blue denim).
+      3. POLICY: Mention "Me." brand has a 7-day hassle-free exchange policy.
+      4. LANGUAGE: Always respond in a smooth, warm, and natural mix of Urdu and English (Hinglish/Roman Urdu). Act like a helpful peer or personal stylist, not a robotic system. Don't use heavy words, keep it cool like a real Pakistani fashion designer talking to a customer.
+      5. BREVITY: Keep recommendations rich but concise (maximum 3-4 lines per answer) so it looks good in the chat bubble.
+      
+      User current message: ${message}
     `;
 
-    // Dispatching content streaming promise context execution payload
-    const result = await model.generateContent(systemPrompt);
-    const response = await result.response;
-    const botReply = response.text; // 👈 Fixed text lookup interface formatting parsing method
+    // High-speed execution with precise system constraints
+    const chatCompletion = await groq.chat.completions.create({
+      messages: [
+        { role: "system", content: systemPrompt }
+      ],
+      model: "llama-3.1-8b-instant",
+      temperature: 0.65, // Slightly lower temperature for more focused, stylish answers
+      max_tokens: 350
+    });
+
+    const botReply = chatCompletion.choices[0]?.message?.content || "No response text.";
 
     return res.status(200).json({
       success: true,
@@ -44,11 +53,10 @@ const handleBotChat = async (req, res) => {
     });
 
   } catch (error) {
-    console.error("🔥 GEMINI CHATBOT CRASH LOG =>", error);
-    return res.status(500).json({
-      success: false,
-      message: "AI engine side error",
-      error: error.message,
+    console.log("🔴 CRITICAL ENGINE EXCEPTION =>", error);
+    return res.status(200).json({
+      success: true, 
+      reply: `🔴 BACKEND CRASH ERROR => ${error.message}`
     });
   }
 };
