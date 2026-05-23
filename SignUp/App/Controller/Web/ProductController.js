@@ -16,13 +16,12 @@ export const addProduct = async (req, res) => {
       oldPrice,
       category,
       subcategory,
-      styleType,    // 👈 Controls Eastern / Western filter routing
-      productType,  // 👈 Controls Featured / Trending / Normal homepage injection
+      styleType,    
+      productType,  
       status,
       size,
     } = req.body;
 
-    // Strict Validation Check
     if (!name || !price || !category || !subcategory || !styleType) {
       return res.status(400).json({
         success: false,
@@ -30,7 +29,6 @@ export const addProduct = async (req, res) => {
       });
     }
 
-    // Image Presence Validation
     if (!req.files?.image1) {
       return res.status(400).json({
         success: false,
@@ -38,23 +36,19 @@ export const addProduct = async (req, res) => {
       });
     }
 
-    // Async Cloudinary Upload Promise Pipeline
     const uploadedImages = await Promise.all([
       req.files.image1 ? uploadoncloudinary(req.files.image1[0].path) : null,
       req.files.image2 ? uploadoncloudinary(req.files.image2[0].path) : null,
       req.files.image3 ? uploadoncloudinary(req.files.image3[0].path) : null,
     ]);
 
-    // Filtering out null/failed uploads safely
     const images = uploadedImages.filter(Boolean);
 
-    // Parsing JSON Array String coming from FormData safely
     let parsedSizes = [];
     if (size) {
       parsedSizes = typeof size === "string" ? JSON.parse(size) : size;
     }
 
-    // Generating safe dynamic dataset entry document
     const product = await Product.create({
       name,
       description,
@@ -86,19 +80,24 @@ export const addProduct = async (req, res) => {
 
 
 // ============================================
-// B. UNIVERSAL MASTER LIST & FILTER (GET)
+// B. UNIVERSAL MASTER LIST & FILTER (GET) - UPDATED WITH SEARCH
 // ============================================
 export const listProduct = async (req, res) => {
   try {
-    // URL Queries reading from request interface (?category=...&productType=...)
-    const { category, subcategory, styleType, productType } = req.query; 
+    // 💡 UPDATED: Added 'search' parameter inside the query restructuring object
+    const { category, subcategory, styleType, productType, search } = req.query; 
     let filterQuery = {};
 
-    // Conditionals mapping block for complex cross-filtering routing logic
+    // Conditionals mapping block for cross-filtering routing logic
     if (category) filterQuery.category = category;
     if (subcategory) filterQuery.subcategory = subcategory;
     if (styleType) filterQuery.styleType = styleType; 
     if (productType) filterQuery.productType = productType;
+
+    // 💡 UPDATED: MongoDB Regex filter logic inject ki hai
+    if (search) {
+      filterQuery.name = { $regex: search, $options: "i" }; // 'i' is case-insensitive filter indicator
+    }
 
     // Single query lookup handling dataset dynamically
     const products = await Product.find(filterQuery).sort({ createdAt: -1 });
@@ -123,8 +122,6 @@ export const listProduct = async (req, res) => {
 export const singleProduct = async (req, res) => {
   try {
     const { id } = req.params;
-
-    // Checks query fallback parameters gracefully
     const product = await Product.findById(id);
 
     if (!product) {
@@ -154,7 +151,6 @@ export const updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
 
-    // Restructuring body injection points safely
     const allowedFields = {
       name: req.body.name,
       description: req.body.description,
@@ -167,7 +163,6 @@ export const updateProduct = async (req, res) => {
       status: req.body.status,
     };
 
-    // Parsing sizes safely if updated inside editing stream dashboards
     if (req.body.sizes) {
       try {
         allowedFields.sizes =
@@ -182,7 +177,6 @@ export const updateProduct = async (req, res) => {
       }
     }
 
-    // Wiping undefined fields out before query hit execution block
     Object.keys(allowedFields).forEach(
       (key) =>
         (allowedFields[key] === undefined || allowedFields[key] === "") &&
@@ -224,7 +218,6 @@ export const updateProduct = async (req, res) => {
 export const removeProduct = async (req, res) => {
   try {
     const { id } = req.params;
-
     const product = await Product.findById(id);
 
     if (!product) {
@@ -234,7 +227,6 @@ export const removeProduct = async (req, res) => {
       });
     }
 
-    // Direct document trigger execution block hook drop
     await product.deleteOne();
 
     return res.status(200).json({
