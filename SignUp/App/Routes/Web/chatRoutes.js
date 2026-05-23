@@ -1,4 +1,5 @@
 const express = require("express");
+// 💡 Controller se object destructure karke function nikalen
 const { handleBotChat } = require("../../Controller/Web/chatController.js");
 
 const chatRouter = express.Router();

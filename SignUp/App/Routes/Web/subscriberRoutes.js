@@ -1,9 +1,10 @@
 const express = require("express");
-const { subscribeEmail } = require("../../Controller/Web/chatController.js"); // Path confirm kar lein
+// 💡 FIX: Destructuring ({ }) use karke direct function import karein
+const { subscribeEmail } = require("../../Controller/Web/subscriberController.js");
 
 const subscriberRouter = express.Router();
 
-// Endpoint: POST http://localhost:8030/api/subscribe
+// Ab yahan handler direct function ban jayega aur crash nahi karega
 subscriberRouter.post("/subscribe", subscribeEmail);
 
 module.exports = subscriberRouter;
