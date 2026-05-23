@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { AiOutlineShoppingCart } from "react-icons/ai";
-import { X, SlidersHorizontal } from "lucide-react"; // 👈 FIXED: Used SlidersHorizontal instead of SlSliders
+import { AiOutlineZoomIn, AiOutlineShoppingCart, AiOutlineHeart } from "react-icons/ai"; // 👈 Added zoom and heart icons for exact match
+import { X, SlidersHorizontal } from "lucide-react"; 
 import { useDispatch } from "react-redux";
 import { addToCart, openCart } from "../redux/cartSlice.js"; 
 
@@ -10,6 +10,7 @@ export default function ProductGrid() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false); 
+  const [hoveredId, setHoveredId] = useState(null); // 👈 Added hover tracking state for the exact icon animations
 
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -184,56 +185,79 @@ export default function ProductGrid() {
               <p className="text-gray-400 font-medium text-sm tracking-wider">Synchronizing Display Engine...</p>
             </div>
           ) : products.length > 0 ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-x-4 gap-y-10 sm:gap-x-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-5 sm:gap-7">
               {products.map((item) => (
-                <div key={item._id} className="group relative flex flex-col justify-between overflow-hidden rounded-xl">
+                <div 
+                  key={item._id} 
+                  className="group relative"
+                  onMouseEnter={() => setHoveredId(item._id)}
+                  onMouseLeave={() => setHoveredId(null)}
+                >
                   
-                  <Link to={`/product/${item._id}`} className="block relative">
+                  {/* CARD CLICK → PRODUCT DETAIL */}
+                  <Link to={`/product/${item._id}`}>
                     
-                    {/* PICTURE MAPPING DISPLAY HOUSING SYSTEM */}
-                    <div className="relative overflow-hidden bg-[#f7f3ee] rounded-xl aspect-[3/4] shadow-sm group-hover:shadow-md transition-shadow duration-300">
+                    {/* PICTURE MAPPING DISPLAY HOUSING SYSTEM (TRENDING MATCH STYLING) */}
+                    <div className="relative overflow-hidden bg-[#f7f3ee]">
                       <img
                         src={item.images?.[0]}
                         alt={item.name}
-                        className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+                        className="w-full aspect-[3/4] object-cover transition duration-500 group-hover:scale-[1.05]"
                       />
                       
+                      {/* Vertical Ribbon badge style exact sync */}
                       {item.status && item.status !== "normal" && (
-                        <span className="absolute top-2 left-2 bg-black text-white text-[9px] font-bold uppercase tracking-wider px-2 py-1 rounded shadow-sm">
+                        <span
+                          className="absolute top-0 left-3 bg-[#C19A6B] text-white text-[10px] uppercase font-semibold tracking-[1px] px-[6px] py-[10px] z-10"
+                          style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
+                        >
                           {item.status}
                         </span>
                       )}
 
-                      {/* Interactive floating cart action button */}
-                      <button
-                        onClick={(e) => handleAddToCart(e, item)}
-                        className="absolute bottom-3 right-3 bg-white text-black p-3.5 rounded-full shadow-xl opacity-0 translate-y-3 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0 hover:bg-black hover:text-white active:scale-90"
+                      {/* Interactive floating action menu panel block sync */}
+                      <div
+                        className={`absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center bg-white shadow-md transition-all duration-300 z-20
+                        ${hoveredId === item._id ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}`}
                       >
-                        <AiOutlineShoppingCart className="text-lg" />
-                      </button>
-                    </div>
+                        {/* QUICK VIEW */}
+                        <button type="button" className="w-[42px] h-[42px] flex items-center justify-center border-r border-gray-200 hover:bg-black hover:text-white transition-all duration-300">
+                          <AiOutlineZoomIn className="text-[18px]" />
+                        </button>
 
-                    {/* CARD TEXT VIEW PORT */}
-                    <div className="mt-4 px-1">
-                      <p className="text-[10px] text-[#C19A6B] uppercase font-bold tracking-[2px] mb-1">
-                        {item.styleType} Wear
-                      </p>
-                      <h3 className="text-sm text-gray-800 font-medium mb-1.5 truncate group-hover:text-[#C19A6B] transition-colors duration-300">
-                        {item.name}
-                      </h3>
-                      <div className="flex items-center gap-2">
-                        <span className="text-[15px] font-bold text-gray-900">
-                          Rs {item.price.toLocaleString()}
-                        </span>
-                        {item.oldPrice && (
-                          <span className="text-xs text-gray-400 line-through font-medium">
-                            Rs {item.oldPrice.toLocaleString()}
-                          </span>
-                        )}
+                        {/* WISHLIST */}
+                        <button type="button" className="w-[42px] h-[42px] flex items-center justify-center border-r border-gray-200 hover:bg-black hover:text-white transition-all duration-300">
+                          <AiOutlineHeart className="text-[18px]" />
+                        </button>
+
+                        {/* CART */}
+                        <button
+                          type="button"
+                          onClick={(e) => handleAddToCart(e, item)}
+                          className="w-[42px] h-[42px] flex items-center justify-center hover:bg-black hover:text-white transition-all duration-300"
+                        >
+                          <AiOutlineShoppingCart className="text-[18px]" />
+                        </button>
                       </div>
                     </div>
-
                   </Link>
+
+                  {/* CARD TEXT VIEW PORT */}
+                  <div className="pt-4">
+                    <h3 className="text-[15px] text-gray-800 font-medium mb-1 truncate hover:text-[#C19A6B] transition duration-300">
+                      {item.name}
+                    </h3>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[15px] font-semibold text-gray-900">
+                        Rs {item.price}
+                      </span>
+                      {item.oldPrice && (
+                        <span className="text-sm text-gray-400 line-through">
+                          Rs {item.oldPrice}
+                        </span>
+                      )}
+                    </div>
+                  </div>
 
                 </div>
               ))}
