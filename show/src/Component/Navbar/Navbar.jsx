@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { Menu, X, ShoppingCart, Search, User, Plus, Minus, ChevronDown } from "lucide-react";
-import { Link } from "react-router-dom"; // 👈 FIXED: Cleaned duplicate broken 'Links' import syntax
+import { Link, useNavigate } from "react-router-dom"; // 👈 Added useNavigate for search query routing redirection
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { removeFromCart, openCart, closeCart, addToCart } from "../../redux/cartSlice.js"; 
 
 function Navbar() {
+  const navigate = useNavigate(); // Hook initializer
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState(null);
   const [dropdown, setDropdown] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [mobileDropdown, setMobileDropdown] = useState("");
+  const [searchQuery, setSearchQuery] = useState(""); // 👈 Tracks live query data inputs inside the box
 
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.items);
@@ -72,6 +74,21 @@ function Navbar() {
       dispatch(removeFromCart(index));
     } else {
       dispatch({ type: "cart/decreaseQuantity", payload: index });
+    }
+  };
+
+  // ============================================
+  // ⚡ DISPATCH GLOBAL CATALOG SEARCH HANDLER
+  // ============================================
+  const handleSearchSubmit = (e) => {
+    if (e.key === "Enter" || e.type === "click") {
+      e.preventDefault();
+      if (searchQuery.trim() !== "") {
+        // Dynamic forwarding redirection parameter matching global listProduct query parameters
+        navigate(`/shop?search=${encodeURIComponent(searchQuery.trim())}`);
+        setShowSearch(false); // Collapses the search layout layer
+        setSearchQuery(""); // Flushes tracking data clean
+      }
     }
   };
 
@@ -202,15 +219,20 @@ function Navbar() {
           {/* ICONS */}
           <div className="flex items-center space-x-3 md:space-x-5">
 
-            {/* SEARCH */}
+            {/* SEARCH CONTAINER WITH DISPATCH PROCEDURES */}
             <div className="relative hidden sm:block">
-              <button onClick={() => setShowSearch(!showSearch)}>
+              <button onClick={() => setShowSearch(!showSearch)} className="flex items-center justify-center p-1">
                 <Search size={22} />
               </button>
               {showSearch && (
                 <input
-                  className="absolute top-12 right-0 border px-4 py-2 rounded-full w-64 bg-white"
-                  placeholder="Search..."
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyDown={handleSearchSubmit} // 👈 Redirects instantly on press enter key code
+                  className="absolute top-12 right-0 border border-gray-200 px-4 py-2 rounded-full w-64 bg-white text-sm text-black focus:outline-none focus:ring-1 focus:ring-[#C19A6B] placeholder-gray-400 shadow-lg animate-fadeIn"
+                  placeholder="Search products..."
+                  autoFocus
                 />
               )}
             </div>
@@ -332,7 +354,7 @@ function Navbar() {
         </div>
       </div>
 
-      {/* MOBILE MENU (UPDATED MATRIX WITH QUERY ROUTING MATCHES) */}
+      {/* MOBILE MENU */}
       <div
         className={`fixed inset-0 bg-black/50 md:hidden ${isOpen ? "visible" : "hidden"}`}
         onClick={() => setIsOpen(false)}
