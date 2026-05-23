@@ -82,24 +82,52 @@ export const addProduct = async (req, res) => {
 // ============================================
 // B. UNIVERSAL MASTER LIST & FILTER (GET) - UPDATED WITH SEARCH
 // ============================================
+// ============================================
+// B. UNIVERSAL MASTER LIST & FILTER (GET) - SMART SEARCH
+// ============================================
+// ============================================
+// B. UNIVERSAL MASTER LIST & FILTER (GET) - COMPREHENSIVE SEARCH
+// ============================================
 export const listProduct = async (req, res) => {
   try {
-    // 💡 UPDATED: Added 'search' parameter inside the query restructuring object
     const { category, subcategory, styleType, productType, search } = req.query; 
     let filterQuery = {};
 
-    // Conditionals mapping block for cross-filtering routing logic
+    // Base drop-down url queries binding
     if (category) filterQuery.category = category;
     if (subcategory) filterQuery.subcategory = subcategory;
     if (styleType) filterQuery.styleType = styleType; 
     if (productType) filterQuery.productType = productType;
 
-    // 💡 UPDATED: MongoDB Regex filter logic inject ki hai
+    // 💡 LIVE INTELLIGENT SEARCH MULTI-FIELD MATCHING
     if (search) {
-      filterQuery.name = { $regex: search, $options: "i" }; // 'i' is case-insensitive filter indicator
+      let cleanSearchTerm = search.toLowerCase().trim();
+
+      // 1. Category Context Extraction Logic
+      if (cleanSearchTerm.includes("woman") || cleanSearchTerm.includes("women")) {
+        filterQuery.category = "women";
+        cleanSearchTerm = cleanSearchTerm.replace(/women|woman/g, "").trim();
+      } else if (cleanSearchTerm.includes("man") || cleanSearchTerm.includes("men")) {
+        filterQuery.category = "men";
+        cleanSearchTerm = cleanSearchTerm.replace(/men|man/g, "").trim();
+      } else if (cleanSearchTerm.includes("kid") || cleanSearchTerm.includes("kids")) {
+        filterQuery.category = "kids";
+        cleanSearchTerm = cleanSearchTerm.replace(/kids|kid/g, "").trim();
+      }
+
+      // 2. Status or Name Multi-Field Matching Trigger ($or operator)
+      if (cleanSearchTerm) {
+        // Agar keyword directly attribute match karta hai (e.g., 'sale', 'new', 'sold')
+        // Toh hum Mongoose ko bolenge ke YA TO product name match karo YA phir status field match karo!
+        filterQuery.$or = [
+          { name: { $regex: cleanSearchTerm, $options: "i" } },
+          { status: { $regex: cleanSearchTerm, $options: "i" } },
+          { productType: { $regex: cleanSearchTerm, $options: "i" } } // Fallback for featured/trending text matching
+        ];
+      }
     }
 
-    // Single query lookup handling dataset dynamically
+    // Database Lookup Query execution statement
     const products = await Product.find(filterQuery).sort({ createdAt: -1 });
 
     return res.status(200).json({
@@ -114,8 +142,6 @@ export const listProduct = async (req, res) => {
     });
   }
 };
-
-
 // ============================================
 // C. SINGLE PRODUCT FETCH BY ID/SLUG (GET)
 // ============================================
