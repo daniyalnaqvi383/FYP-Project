@@ -1,5 +1,5 @@
-// 💡 THE ULTIMATE FIX: Constructor ke jhanjhat se nikalne ke liye direct package core require karein
-const GoogleGenAIModule = require("@google/generative-ai");
+// 💡 THE ULTRA STABLE FIX: Import the direct generation method wrapper
+const { GoogleGenAI } = require("@google/generative-ai");
 
 const handleBotChat = async (req, res) => {
   try {
@@ -9,29 +9,19 @@ const handleBotChat = async (req, res) => {
       return res.status(400).json({ success: false, message: "Message is required" });
     }
 
-    // Safely check if the module loader initialized correctly
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
-      return res.status(500).json({ success: false, message: "GEMINI_API_KEY is missing in .env file" });
+      console.log("❌ CRITICAL: GEMINI_API_KEY is missing inside your .env file!");
+      return res.status(500).json({ success: false, message: "API key environment configuration missing" });
     }
 
-    // 💡 WAY OUT: Aggr constructor error de raha hai, to direct function call standard use karein
-    // Yeh library ka built-in method hai jo bina 'new' keyword ke client initialize karta hai
-    const ai = GoogleGenAIModule.GoogleGenAI ? new GoogleGenAIModule.GoogleGenAI({ apiKey }) : null;
+    // 💡 NEW INDUSTRY STANDARD: Instantiate the client with correct option block formatting
+    const ai = new GoogleGenAI({ apiKey: apiKey });
     
-    // Fallback approach agar aapka version functions format support karta hai
-    const model = ai 
-      ? ai.getGenerativeModel({ model: "gemini-1.5-flash" })
-      : GoogleGenAIModule.getGenerativeModel 
-        ? GoogleGenAIModule.getGenerativeModel({ apiKey, model: "gemini-1.5-flash" })
-        : null;
+    // Stable production model allocation mapping channel
+    const model = ai.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-    if (!model) {
-      // Third approach for older versions package layouts fallback
-      return res.status(500).json({ success: false, message: "Google SDK mapping mismatch. Please verify package version." });
-    }
-
-    // Chatbot context behavior system layout rules
+    // Chatbot configuration behavior engine prompt
     const systemPrompt = `
       You are a smart, professional, and friendly AI fashion assistant for an e-commerce clothing brand named "Me.".
       Your goals are:
@@ -43,9 +33,10 @@ const handleBotChat = async (req, res) => {
       User message: ${message}
     `;
 
-    // Dispatch request payload execution stream
+    // Dispatching content streaming promise context execution payload
     const result = await model.generateContent(systemPrompt);
-    const botReply = result.response.text || result.response.text();
+    const response = await result.response;
+    const botReply = response.text; // 👈 Fixed text lookup interface formatting parsing method
 
     return res.status(200).json({
       success: true,
@@ -53,7 +44,7 @@ const handleBotChat = async (req, res) => {
     });
 
   } catch (error) {
-    console.error("🔥 GEMINI CHATBOT CRASH =>", error);
+    console.error("🔥 GEMINI CHATBOT CRASH LOG =>", error);
     return res.status(500).json({
       success: false,
       message: "AI engine side error",
