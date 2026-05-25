@@ -2,6 +2,7 @@ import React, { useState } from 'react'; // 👈 Updated with useState integrati
 import { Link } from 'react-router-dom'; 
 import axios from 'axios'; // 👈 Imported axios for asynchronous database logging
 import { FaInstagram, FaFacebookF, FaTiktok, FaArrowRight } from 'react-icons/fa';
+import logo from "../../assets/logofooter.png"; // 👈 Logo image import
 
 const Footer = () => {
   // ============================================
@@ -68,7 +69,7 @@ const handleSubscribe = async (e) => {
                 placeholder="Enter your email" 
                 className="bg-transparent outline-none w-full text-sm placeholder:text-gray-500 text-white disabled:opacity-50"
                 disabled={loading}
-                required
+                requiredf
               />
               <button 
                 type="submit" 
@@ -89,7 +90,13 @@ const handleSubscribe = async (e) => {
 
           {/* Social Profiles container block */}
           <div className="flex flex-col items-start lg:items-end w-full lg:w-auto">
-             <h1 className="text-4xl sm:text-5xl font-black tracking-tighter mb-4">Me.</h1>
+            <Link to="/" className="flex items-center h-full py-2">
+  <img 
+    src={logo} 
+    alt="TryLo Logo" 
+    className="h-25 w-auto object-contain transition-transform duration-300 hover:scale-105 bg-black" 
+  />
+</Link>
              <div className="flex space-x-4">
                 <a href="#" className="p-2 border border-zinc-700 rounded-full text-gray-400 hover:bg-white hover:text-black hover:border-white transition-all duration-300"><FaInstagram size={15} /></a>
                 <a href="#" className="p-2 border border-zinc-700 rounded-full text-gray-400 hover:bg-white hover:text-black hover:border-white transition-all duration-300"><FaTiktok size={15} /></a>

@@ -91,13 +91,13 @@ function Hero() {
                   <div className="max-w-[580px]">
 
                     <p className="text-[#C19A6B] text-[10px] sm:text-xs md:text-sm tracking-[3px] mb-3 sm:mb-4 uppercase animateFade">
-                      Winter Collection
+                      Summer Collection
                     </p>
 
                     <h1 className="text-[26px] sm:text-[34px] md:text-[72px]  font-semibold leading-[1] text-black mb-4 sm:mb-5 animateFade delay200">
-                      New Winter
+                       Summer
                       <br />
-                      Collections 2026
+                      Collections 2026 up to 50% off
                     </h1>
 
                     <p

@@ -75,7 +75,7 @@ function Timer() {
             </p>
 
             <h1 className="text-[32px] sm:text-[44px] lg:text-[54px] font-bold text-white leading-tight">
-              “<span className="text-[#C19A6B]">60% Sale</span> On Selected Products”
+              “<span className="text-[#C19A6B]">50% Sale</span> On Selected Products”
             </h1>
 
             <p className="text-white text-[15px] leading-7 mt-5 max-w-[520px] mx-auto lg:mx-0">

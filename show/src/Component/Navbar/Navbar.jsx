@@ -4,6 +4,8 @@ import { Link, useNavigate } from "react-router-dom"; // 👈 Added useNavigate 
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { removeFromCart, openCart, closeCart, addToCart } from "../../redux/cartSlice.js"; 
+import logo from "../../assets/logo.png"; // 👈 Logo image import
+import { FaFontAwesome, FaWhatsapp } from "react-icons/fa";
 
 function Navbar() {
   const navigate = useNavigate(); // Hook initializer
@@ -105,12 +107,14 @@ function Navbar() {
           </button>
 
           {/* LOGO */}
-          <Link to="/" className="flex items-center gap-2">
-            <div className="bg-[#C19A6B] p-1.5 rounded-lg">
-              <ShoppingCart size={18} className="text-white" />
-            </div>
-            <span className="text-2xl font-bold tracking-tighter">Me</span>
-          </Link>
+         <Link to="/" className="flex items-center h-full py-2">
+  <img 
+    src={logo} 
+    alt="TryLo Logo" 
+    className="h-25 w-auto object-contain transition-transform duration-300 hover:scale-105" 
+    
+  />
+</Link>
 
           {/* DESKTOP MENU */}
           <div className="hidden md:flex items-center space-x-8 font-medium text-gray-800 relative">
@@ -268,6 +272,15 @@ function Navbar() {
                 {cartItems.reduce((acc, curr) => acc + (curr.quantity || 1), 0)}
               </span>
             </button>
+            <a
+    href="https://wa.me/923484236919?text=Hi%20I%20want%20to%20know%20more%20about%20your%20products"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="whatsapp-icon"
+    style={{ marginLeft: '15px', color: '#25D366', fontSize: '30px' }}
+  >
+    <FaWhatsapp />
+  </a>
           </div>
         </div>
       </div>
