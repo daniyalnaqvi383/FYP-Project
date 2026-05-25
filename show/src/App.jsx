@@ -14,10 +14,15 @@ import Footer from './Component/Footer/Footer';
 import Returnexchange from './Pages/Returnexchange';
 import AboutUS from './Pages/AboutUS';
 import ShippingPolicy from './Pages/ShippingPolicy';
+import FAQs from './Pages/FAQs';
+import Careers from './Pages/Careers';
+import ScrollToTop from './ScrollToTop';
 
 function App() {
   return (
     <>
+      <ScrollToTop />
+  
       <Navbar />
       <Routes>
         <Route path="/" element={<Hero />} />
@@ -31,6 +36,12 @@ function App() {
         <Route path="/returnexchange" element={<Returnexchange/>} />
         <Route path="/Aboutus" element={<AboutUS/>} />
         <Route path="/ShippingPolicy" element={<ShippingPolicy/>} />
+      
+        <Route path="/faqs" element={<FAQs/>} />
+        <Route path="/careers" element={<Careers/>} />
+       
+
+      
 
 
 
