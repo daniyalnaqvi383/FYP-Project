@@ -173,7 +173,7 @@ function Hero() {
     <Trending/>
     <Timer/>
     <Feature/>
-    <Footer/>
+  
     
 
     </>

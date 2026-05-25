@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Menu, X, ShoppingCart, Search, User, Plus, Minus, ChevronDown } from "lucide-react";
+import { Menu, X, ShoppingCart, Search, User, Plus, Minus, ChevronDown, ShoppingBag, ShoppingBasket, ShoppingBasketIcon } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom"; // 👈 Added useNavigate for search query routing redirection
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { removeFromCart, openCart, closeCart, addToCart } from "../../redux/cartSlice.js"; 
 import logo from "../../assets/logo.png"; // 👈 Logo image import
-import { FaFontAwesome, FaWhatsapp } from "react-icons/fa";
+import { FaFontAwesome, FaShoppingBag, FaShoppingCart, FaWhatsapp } from "react-icons/fa";
 
 function Navbar() {
   const navigate = useNavigate(); // Hook initializer
@@ -214,7 +214,7 @@ function Navbar() {
             </Link>
 
             {/* RETURN */}
-            <Link to="/return-exchange" className="hover:text-[#C19A6B] transition">
+            <Link to="/returnexchange" className="hover:text-[#C19A6B] transition">
               Return & Exchange
             </Link>
 
@@ -267,7 +267,7 @@ function Navbar() {
 
             {/* CART ICON */}
             <button className="relative" onClick={() => dispatch(openCart())}>
-              <ShoppingCart size={22} />
+              <ShoppingBasketIcon size={22} />
               <span className="absolute -top-1 -right-1 bg-[#C19A6B] text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full">
                 {cartItems.reduce((acc, curr) => acc + (curr.quantity || 1), 0)}
               </span>

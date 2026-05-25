@@ -10,6 +10,8 @@ import Checkout from './Pages/Checkout';
 import OrderConfirmation from './Pages/OrderConfirmation';
 import ProductGrid from './Pages/ProductGrid';
 import Chatbot from './Component/Chatbot/Chatbot';
+import Footer from './Component/Footer/Footer';
+import Returnexchange from './Pages/Returnexchange';
 
 function App() {
   return (
@@ -24,6 +26,7 @@ function App() {
          <Route path="/Checkout" element={<Checkout/>} />
          <Route path="/shop" element={<ProductGrid />} />
          <Route path="/order-confirmation" element={<OrderConfirmation />} />
+        <Route path="/returnexchange" element={<Returnexchange/>} />
 
 
 
@@ -31,6 +34,7 @@ function App() {
 
       </Routes>
       <Chatbot/>
+      <Footer/>
     </>
   );
 }

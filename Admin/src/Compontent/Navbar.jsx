@@ -24,29 +24,38 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
     };
 
     return (
-        <nav className="w-full bg-white shadow-md px-6 py-3 mb-1 flex items-center justify-between fixed top-0 left-0 z-40">
+        <>
+            {/* FIXED NAVBAR CONTAINER */}
+            <nav className="w-full h-24 bg-white shadow-md px-6 flex items-center justify-between fixed top-0 left-0 z-50 border-b border-gray-100">
 
-            {/* Mobile Sidebar Toggle */}
-            <button className="md:hidden" onClick={() => setSidebarOpen(!sidebarOpen)}>
-                <Menu size={28} />
-            </button>
+                {/* Mobile Sidebar Toggle */}
+                <button className="md:hidden" onClick={() => setSidebarOpen(!sidebarOpen)}>
+                    <Menu size={28} />
+                </button>
 
-             <Link to="/" className="flex items-center h-full py-2">
-  <img 
-    src={logo} 
-    alt="TryLo Logo" 
-    className="h-10 w-auto object-contain transition-transform duration-300 hover:scale-105" 
-  />
-</Link>
+                {/* LOGO AREA */}
+                <Link to="/" className="flex items-center py-2">
+                    <img 
+                        src={logo} 
+                        alt="TryLo Logo" 
+                        className="h-16 w-auto object-contain transition-transform duration-300 hover:scale-105" 
+                    />
+                </Link>
 
-            <button
-                className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
-                onClick={logout}
-            >
-                Logout
-            </button>
+                <button
+                    className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
+                    onClick={logout}
+                >
+                    Logout
+                </button>
 
-        </nav>
+            </nav>
+
+            {/* 💡 THE GLOBAL SPACING FIX: This block creates an exact height gap (h-24) globally.
+                Yeh block fixed navbar ke niche space banaye rakhay ga taake Add, List, aur Order pages 
+                ka content kabhi bhi header ke piche na chhupe! */}
+            <div className="h-24 w-full block clear-both"></div>
+        </>
     );
 }
 
