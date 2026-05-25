@@ -127,8 +127,9 @@ const handleSubscribe = async (e) => {
             <h4 className="font-bold text-xs uppercase tracking-[0.2em] mb-4 text-gray-300">Customer Care</h4>
             <ul className="space-y-2.5 text-sm text-gray-400 font-medium">
               <li><a href="#" className="hover:text-[#C19A6B] transition-colors">Track Your Order</a></li>
-              <li><a href="#" className="hover:text-[#C19A6B] transition-colors">Shipping Policy</a></li>
-              <li><Link to="/return-exchange" className="hover:text-[#C19A6B] transition-colors">Returns & Exchanges</Link></li>
+              
+              <li><Link to="/shippingpolicy" className="hover:text-[#C19A6B] transition-colors">Shipping Policy</Link></li>
+              <li><Link to="/returnexchange" className="hover:text-[#C19A6B] transition-colors">Returns & Exchanges</Link></li>
               <li><a href="#" className="hover:text-[#C19A6B] transition-colors">FAQs</a></li>
             </ul>
           </div>
@@ -137,7 +138,7 @@ const handleSubscribe = async (e) => {
           <div>
             <h4 className="font-bold text-xs uppercase tracking-[0.2em] mb-4 text-gray-300">Our Story</h4>
             <ul className="space-y-2.5 text-sm text-gray-400 font-medium">
-              <li><a href="#" className="hover:text-[#C19A6B] transition-colors">About Us</a></li>
+              <li><Link to="/Aboutus" className="hover:text-[#C19A6B] transition-colors">About Us</Link></li>
               <li><a href="#" className="hover:text-[#C19A6B] transition-colors">Sustainability</a></li>
               <li><a href="#" className="hover:text-[#C19A6B] transition-colors">Store Locator</a></li>
               <li><a href="#" className="hover:text-[#C19A6B] transition-colors">Careers</a></li>

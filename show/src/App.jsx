@@ -12,6 +12,8 @@ import ProductGrid from './Pages/ProductGrid';
 import Chatbot from './Component/Chatbot/Chatbot';
 import Footer from './Component/Footer/Footer';
 import Returnexchange from './Pages/Returnexchange';
+import AboutUS from './Pages/AboutUS';
+import ShippingPolicy from './Pages/ShippingPolicy';
 
 function App() {
   return (
@@ -27,6 +29,10 @@ function App() {
          <Route path="/shop" element={<ProductGrid />} />
          <Route path="/order-confirmation" element={<OrderConfirmation />} />
         <Route path="/returnexchange" element={<Returnexchange/>} />
+        <Route path="/Aboutus" element={<AboutUS/>} />
+        <Route path="/ShippingPolicy" element={<ShippingPolicy/>} />
+
+
 
 
 
