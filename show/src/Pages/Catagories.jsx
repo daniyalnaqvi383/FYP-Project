@@ -1,36 +1,43 @@
 import React from "react";
 import { ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
+import cata1 from "../assets/cata1.png";
+import cata2 from "../assets/cata2.png";
+import cata3 from "../assets/cata3.png";
 
 const categories = [
   {
     title: "WOMEN'S WEAR",
     items: "3268 Items",
-    image:
-      "https://kumo-shreethemes.netlify.app/assets/b-1-D-HNkJ_h.png",
+    image: cata1,
+    category: "women",
   },
   {
     title: "KID'S WEAR",
     items: "8562 Items",
-    image:
-      "https://kumo-shreethemes.netlify.app/assets/b-3-Gejxozrv.png",
+    image: cata2,
+    category: "kids",
   },
   {
     title: "MEN'S WEAR",
     items: "32 Items",
-    image:
-      "https://kumo-shreethemes.netlify.app/assets/b-5-sdfB0ous.png",
+    image: cata3,
+    category: "men",
   },
 ];
 
 export default function FashionCategories() {
+
   return (
     <div className="w-full bg-[#f8f8f8] py-6 px-3 md:px-6 lg:px-10">
       
-      {/* GRID */}
       <div className="grid grid-cols-1 lg:grid-cols-[1.3fr_1fr] gap-4">
 
-        {/* LEFT WOMEN CARD */}
-        <div className="relative overflow-hidden rounded-sm bg-[#dfecef] h-[420px] group">
+        {/* WOMEN CARD - FULL CLICKABLE */}
+        <Link
+          to={`/shop?category=${categories[0].category}`}
+          className="relative overflow-hidden rounded-sm bg-[#dfecef] h-[420px] group block"
+        >
           
           <img
             src={categories[0].image}
@@ -38,7 +45,6 @@ export default function FashionCategories() {
             className="absolute right-0 bottom-0 h-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
 
-          {/* CONTENT */}
           <div className="relative z-10 p-5 flex flex-col justify-between h-full">
 
             <div>
@@ -51,18 +57,22 @@ export default function FashionCategories() {
               </p>
             </div>
 
-            <button className="w-fit border border-black px-5 py-2 text-sm flex items-center gap-2 hover:bg-black hover:text-white transition-all duration-300">
+            <span className="w-fit border border-black px-5 py-2 text-sm flex items-center gap-2 hover:bg-black hover:text-white transition-all duration-300">
               Browse Items
               <ArrowRight size={16} />
-            </button>
+            </span>
+
           </div>
-        </div>
+        </Link>
 
         {/* RIGHT SIDE */}
         <div className="flex flex-col gap-4">
 
-          {/* KIDS CARD */}
-          <div className="relative overflow-hidden rounded-sm bg-[#f2ece9] h-[200px] group">
+          {/* KIDS */}
+          <Link
+            to={`/shop?category=${categories[1].category}`}
+            className="relative overflow-hidden rounded-sm bg-[#f2ece9] h-[200px] group block"
+          >
             
             <img
               src={categories[1].image}
@@ -70,7 +80,6 @@ export default function FashionCategories() {
               className="absolute right-0 bottom-0 h-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
 
-            {/* CONTENT */}
             <div className="relative z-10 p-5 flex flex-col justify-between h-full">
 
               <div>
@@ -83,15 +92,19 @@ export default function FashionCategories() {
                 </p>
               </div>
 
-              <button className="w-fit border border-black px-4 py-2 text-sm flex items-center gap-2 hover:bg-black hover:text-white transition-all duration-300">
+              <span className="w-fit border border-black px-4 py-2 text-sm flex items-center gap-2 hover:bg-black hover:text-white transition-all duration-300">
                 Browse
                 <ArrowRight size={15} />
-              </button>
-            </div>
-          </div>
+              </span>
 
-          {/* MEN CARD */}
-          <div className="relative overflow-hidden rounded-sm bg-[#f2efeb] h-[200px] group">
+            </div>
+          </Link>
+
+          {/* MEN */}
+          <Link
+            to={`/shop?category=${categories[2].category}`}
+            className="relative overflow-hidden rounded-sm bg-[#f2efeb] h-[200px] group block"
+          >
             
             <img
               src={categories[2].image}
@@ -99,7 +112,6 @@ export default function FashionCategories() {
               className="absolute right-0 bottom-0 h-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
 
-            {/* CONTENT */}
             <div className="relative z-10 p-5 flex flex-col justify-between h-full">
 
               <div>
@@ -112,12 +124,13 @@ export default function FashionCategories() {
                 </p>
               </div>
 
-              <button className="w-fit border border-black px-4 py-2 text-sm flex items-center gap-2 hover:bg-black hover:text-white transition-all duration-300">
+              <span className="w-fit border border-black px-4 py-2 text-sm flex items-center gap-2 hover:bg-black hover:text-white transition-all duration-300">
                 Browse
                 <ArrowRight size={15} />
-              </button>
+              </span>
+
             </div>
-          </div>
+          </Link>
 
         </div>
       </div>

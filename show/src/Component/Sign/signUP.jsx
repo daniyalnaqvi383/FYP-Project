@@ -20,9 +20,6 @@ const SignUP = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // ============================================
-  // ✅ Handle Submit (NORMAL SIGNUP)
-  // ============================================
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -33,10 +30,8 @@ const SignUP = () => {
       
       setMessage(res.data.message || "User registered successfully! ✅");
       
-      // Save newly created token safely to memory layout storage block
       if (res.data.token) {
         localStorage.setItem("token", res.data.token);
-        // Dispatch instant event notification listener trigger to re-sync navbar
         window.dispatchEvent(new Event("storage"));
       }
 
@@ -57,19 +52,14 @@ const SignUP = () => {
     }
   };
 
-  // ============================================
-  // 🌐 Google Signup
-  // ============================================
   const googleSignup = async () => {
     try {
       const response = await signInWithPopup(auth, provider);
       let user = response.user;
-      let name = user.displayName;
-      let email = user.email;
 
       const res = await axios.post("http://localhost:8030/api/google-signup", {
-        name,
-        email,
+        name: user.displayName,
+        email: user.email,
       });
 
       setMessage(res.data.message || "Signup/Login successful ✅");
@@ -84,39 +74,42 @@ const SignUP = () => {
       }, 1500);
 
     } catch (error) {
-      console.error("Google Signup Error:", error);
-      if (error.response) {
-        setMessage(error.response.data.message);
-      } else {
-        setMessage("Google signup failed. Try again.");
-      }
+      setMessage("Google signup failed. Try again.");
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-gray-800 text-white">
-      <div className="w-full max-w-md bg-gray-900 p-8 rounded-2xl shadow-lg border border-gray-700">
-        <h2 className="text-2xl font-bold text-center mb-2">Registration Page</h2>
+    <div className="min-h-screen flex items-center justify-center bg-black text-white">
+
+      {/* CARD */}
+      <div className="w-full max-w-md bg-[#111111] p-8 rounded-2xl shadow-2xl border border-[#C19A6B]/40">
+
+        <h2 className="text-2xl font-bold text-center mb-2 text-[#C19A6B]">
+          Registration Page
+        </h2>
+
         <p className="text-center text-gray-400 mb-6">
-          Welcome to OneCart, Place your order
+          Welcome to Trylo, Place your order
         </p>
 
         {/* Google Signup */}
-        <button onClick={googleSignup}
-          className="w-full flex items-center justify-center gap-2 bg-gray-800 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-lg border border-gray-600 transition duration-200"
+        <button
+          onClick={googleSignup}
+          className="w-full flex items-center justify-center gap-2 bg-black hover:bg-[#C19A6B]/20 text-white font-medium py-2 px-4 rounded-lg border border-[#C19A6B]/50 transition duration-200"
         >
           <FcGoogle size={20} />
           Registration with Google
         </button>
 
         <div className="flex items-center my-6">
-          <div className="flex-grow border-t border-gray-700"></div>
-          <span className="mx-3 text-gray-500">OR</span>
-          <div className="flex-grow border-t border-gray-700"></div>
+          <div className="flex-grow border-t border-[#C19A6B]/40"></div>
+          <span className="mx-3 text-[#C19A6B]">OR</span>
+          <div className="flex-grow border-t border-[#C19A6B]/40"></div>
         </div>
 
-        {/* Form */}
+        {/* FORM */}
         <form onSubmit={handleSubmit}>
+
           <div className="mb-4">
             <input
               name="name"
@@ -125,9 +118,10 @@ const SignUP = () => {
               value={formData.name}
               onChange={handleChange}
               required
-              className="w-full px-4 py-2 bg-gray-800 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-black border border-[#C19A6B]/40 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C19A6B] text-white"
             />
           </div>
+
           <div className="mb-4">
             <input
               name="email"
@@ -136,9 +130,10 @@ const SignUP = () => {
               value={formData.email}
               onChange={handleChange}
               required
-              className="w-full px-4 py-2 bg-gray-800 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-black border border-[#C19A6B]/40 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C19A6B] text-white"
             />
           </div>
+
           <div className="mb-6">
             <input
               name="password"
@@ -147,29 +142,34 @@ const SignUP = () => {
               value={formData.password}
               onChange={handleChange}
               required
-              className="w-full px-4 py-2 bg-gray-800 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-black border border-[#C19A6B]/40 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C19A6B] text-white"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 disabled:opacity-50"
+            className="w-full bg-[#C19A6B] hover:bg-[#a87f53] text-black font-semibold py-2 px-4 rounded-lg transition duration-200 disabled:opacity-50"
           >
             {loading ? "Creating..." : "Create Account"}
           </button>
         </form>
 
+        {/* MESSAGE */}
         {message && (
-          <p className="mt-4 text-center text-sm text-amber-400 font-medium">{message}</p>
+          <p className="mt-4 text-center text-sm text-[#C19A6B] font-medium">
+            {message}
+          </p>
         )}
 
+        {/* LOGIN */}
         <p className="mt-6 text-center text-sm text-gray-400">
           You have any account?{" "}
-          <Link to="/login" className="text-purple-400 hover:underline">
+          <Link to="/login" className="text-[#C19A6B] hover:underline">
             Login
           </Link>
         </p>
+
       </div>
     </div>
   );
