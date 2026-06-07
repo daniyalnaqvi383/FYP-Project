@@ -1,4 +1,4 @@
-# 🧥 "Me." Virtual Try-On Clothing E-Commerce Web Application
+# 🧥 "Trylo." Virtual Try-On Clothing E-Commerce Web Application
 
 Welcome to the **"Me."** E-commerce ecosystem. This project is a full-stack Virtual Try-On Clothing Web Application designed to provide customers with an interactive, modern online shopping experience, coupled with a powerful administration dashboard and a robust backend API service.
 
